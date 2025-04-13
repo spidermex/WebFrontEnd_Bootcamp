@@ -1,0 +1,85 @@
+
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Match game ScoreBoard</title>
+    <link rel="stylesheet" href="index.css">
+</head>
+
+<body onload="initialize_displays()">
+    <header class="rowflex">
+        <h1>Match game ScoreBoard</h1>
+    </header>
+
+    <div class="contenedor">
+        <div class="rowflex">
+            <div class="colflex">
+                <div class="rowflex">
+                    <p class="headtxt">HOME</p>
+                </div>
+                <div class="rowflex">
+                    <p class="scoretxt redtxt" id="score_home">0</p>
+                </div>
+                <div class="rowflex">
+                    <div class="btnContainer">
+                        <button class="minibtn" onclick="add_points(1,'home')">+1</button>
+                        <button class="minibtn" onclick="add_points(2,'home')">+2</button>
+                        <button class="minibtn" onclick="add_points(3,'home')">+3</button>
+                    </div>
+                </div>
+            </div>
+            <div class="colflex">
+                <div class="rowflex">
+                    <p class="headtxt">Time</p>
+                </div>
+                <div class="rowflex">
+                    <p class="timetxt redtxt" id="game_time">00:00</p>
+                </div>
+                <div class="rowflex">
+                    <div class="btnContainer">
+                        <button class="minibtn" onclick="startTimer()">Start</button>
+                        <button class="minibtn" onclick="stopTimer()">Stop</button>
+                        <button class="minibtn" onclick="reset_game()">Reset</button>
+                    </div>
+                </div>
+                <div class="rowflex">
+                    <div class="colflex winpanel">
+                        <p class="touttext2 redtxt" id="win_home">•</p>
+                        <p class="touttext redtxt" id="tout_home" onclick="timeOut_process('home')">4</p>
+                    </div>
+                    <div class="colflex">
+                        <p class="touttext2">Win</p>
+                        <p class="touttext2">TO</p>
+                    </div>
+                    <div class="colflex winpanel">
+                        <p class="touttext2 redtxt" id="win_guest">•</p>
+                        <p class="touttext redtxt" id="tout_guest" onclick="timeOut_process('guest')">4</p>
+                    </div>
+                </div>
+            </div>
+            <div class="colflex">
+                <div class="rowflex">
+                    <p class="headtxt">GUEST</p>
+                </div>
+                <div class="rowflex">
+                    <p class="scoretxt redtxt" id="score_guest">0</p>
+                </div>
+                <div class="rowflex">
+                    <div class="btnContainer">
+                        <button class="minibtn" onclick="add_points(1,'guest')">+1</button>
+                        <button class="minibtn" onclick="add_points(2,'guest')">+2</button>
+                        <button class="minibtn" onclick="add_points(3,'guest')">+3</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script src="index.js"></script>
+
+</body>
+
+</html>

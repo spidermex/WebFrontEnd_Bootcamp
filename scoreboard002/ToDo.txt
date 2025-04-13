@@ -1,0 +1,7 @@
+ToDo List for this project
+
+- Validate that while "on pause", score buttons should be disabled
+- Handle texts overflows on scores
+- optimize CSS/HTML integrations
+- cosmetic improvements
+
