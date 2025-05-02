@@ -16,9 +16,9 @@ const SoundToggle = () => {
   return (
     <SoundButton onClick={toggleSound} soundOn={soundOn}>
       {soundOn ? (
-        <span role="img" aria-label="Sonido activado"><img src='src/assets/images/sound-on.svg'></img></span>
+        <span role="img" aria-label="Sonido activado"><img src='./images/sound-on.svg'></img></span>
       ) : (
-        <span role="img" aria-label="Sonido desactivado"><img src='src/assets/images/sound-off.svg'></img></span>
+        <span role="img" aria-label="Sonido desactivado"><img src='./images/sound-off.svg'></img></span>
       )}
     </SoundButton>
   );
