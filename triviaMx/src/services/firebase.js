@@ -40,7 +40,7 @@ export const getRandomQuestion = async (category) => {
     
     // Generar un índice aleatorio basado en el contador
     const maxIndex = counters[categoryName];
-    const randomIndex = Math.floor(Math.random() * maxIndex) + 1;
+    const randomIndex = Math.floor(Math.random() * maxIndex);
     
     // Obtener la pregunta aleatoria
     const questionRef = ref(database, `${categoryName}/${randomIndex}`);

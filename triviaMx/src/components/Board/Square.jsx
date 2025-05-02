@@ -112,30 +112,15 @@ const PlayersContainer = styled.div`
 `;
 
 const PlayerPiece = styled.div`
-  width: 12px;
-  height: 12px;
-  z-index: 11;
-  color: black;
-   border-radius: 50%; 
+  width: 24px;
+  height: 24px;
+/*  border-radius: 50%;  */
    background-color:transparent; 
   background-image: ${props => props.player === "ignorance" ? `url(${ignoranceImage})` : `url(${playerImage})`};
   background-size: contain;
   background-repeat: no-repeat;
   background-position: center;
-  @media (min-width: 480px) {
-    width: 14px;
-    height: 14px;
-  }
   
-  @media (min-width: 768px) {
-    width: 18px;
-    height: 18px;
-  }
-  
-  @media (min-width: 1024px) {
-    width: 20px;
-    height: 20px;
-  }
 `;
 
 export default Square;

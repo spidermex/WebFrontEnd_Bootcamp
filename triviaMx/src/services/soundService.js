@@ -7,7 +7,7 @@ import diceRollSound from '../assets/sounds/dice-roll.mp3';
 import correctAnswerSound from '../assets/sounds/correct-answer.mp3';
 import wrongAnswerSound from '../assets/sounds/wrong-answer.mp3';
 import gameWinSound from '../assets/sounds/game-win.mp3';
-import gameOverSound from '../assets/sounds/game-over.mp3';
+import gameOverSound from '../assets/sounds/Sad-Trombone.mp3';
 import criticalTimeSound from '../assets/sounds/tenSeconds.mp3';
 
 // Crear instancias de audio para cada efecto
