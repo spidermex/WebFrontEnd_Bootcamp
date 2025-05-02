@@ -8,6 +8,7 @@ import correctAnswerSound from '../assets/sounds/correct-answer.mp3';
 import wrongAnswerSound from '../assets/sounds/wrong-answer.mp3';
 import gameWinSound from '../assets/sounds/game-win.mp3';
 import gameOverSound from '../assets/sounds/game-over.mp3';
+import criticalTimeSound from '../assets/sounds/tenSeconds.mp3';
 
 // Crear instancias de audio para cada efecto
 const diceRoll = new Audio(diceRollSound);
@@ -15,6 +16,7 @@ const correctAnswer = new Audio(correctAnswerSound);
 const wrongAnswer = new Audio(wrongAnswerSound);
 const gameWin = new Audio(gameWinSound);
 const gameOver = new Audio(gameOverSound);
+const criticalTime = new Audio(criticalTimeSound);
 
 // Estado global de sonido
 let soundEnabled = true;
@@ -33,6 +35,22 @@ const soundService = {
     }
   },
   
+/**
+ * Reproducir sonido de tiempo crítico
+ */
+  playCriticalTime: () => {
+    if (soundEnabled) {
+      criticalTime.currentTime = 0;
+      criticalTime.play().catch(error => console.warn('Error reproduciendo sonido:', error));
+    }
+  },
+
+  stopCriticalTime: () => {
+    if (soundEnabled) {
+      criticalTime.pause();
+    }
+  },
+
   /**
    * Reproducir sonido de respuesta correcta
    */

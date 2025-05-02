@@ -176,9 +176,15 @@ export const GameProvider = ({ children }) => {
     if (timerActive && timer > 0) {
       interval = setInterval(() => {
         setTimer(prevTimer => prevTimer - 1);
-      }, 1000);
+      }, 1000);      
     } else if (timer === 0 && timerActive) {
       handleTimeUp();
+    }
+
+    if (timerActive && timer <= 10 && timer > 0) {
+      soundService.playCriticalTime();
+    } else {
+      soundService.stopCriticalTime();
     }
     
     return () => {

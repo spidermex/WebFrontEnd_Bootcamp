@@ -12,11 +12,13 @@ const Question = () => {
     CATEGORIES,
     currentDice
   } = useGame();
+
   
   if (!currentQuestion) return null;
   
   const category = CATEGORIES[currentDice];
   const isTimeCritical = timer <= 10;
+
   
   return (
     <QuestionContainer>
