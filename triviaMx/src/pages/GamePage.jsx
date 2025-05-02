@@ -110,10 +110,15 @@ const GamePage = () => {
           )}
           
           {currentQuestion && (
-            <QuestionContainer>
-              <Question />
-              <AnswerOptions />
-            </QuestionContainer>
+            <Modal
+              show={true}
+              title={`Pregunta valor ${currentDice}`}
+              onClose={() => {}} >
+              <QuestionContainer>
+                <Question />
+                <AnswerOptions />
+              </QuestionContainer>
+            </Modal>
           )}
         </GameControlsWrapper>
       </>
@@ -123,7 +128,7 @@ const GamePage = () => {
   return (
     <GamePageContainer>
       <Header>
-        <GameTitle>Trivia Mx</GameTitle>
+        <GameTitle>Cosmic Trivia</GameTitle>
         <HeaderControls>
           <SoundToggle />
           <Button 
@@ -144,6 +149,7 @@ const GamePage = () => {
       >
         <RulesList>
           <RuleItem>Tira el dado para determinar una categoría de preguntas.</RuleItem>
+          <RuleItem>Si caes en un 'Hoyo Negro' Serás teletransportado a una casilla aleatoria.</RuleItem>
           <RuleItem>Responde correctamente y avanzarás el número de casillas que muestre el dado.</RuleItem>
           <RuleItem>Si respondes incorrectamente o se acaba el tiempo (20 segundos), la "ignorancia" avanzará el número de casillas que muestre el dado.</RuleItem>
           <RuleItem>El primero en llegar a la casilla 50 gana la partida.</RuleItem>
@@ -199,7 +205,7 @@ const Header = styled.header`
 
 const GameTitle = styled.h1`
   font-size: 22px;
-  color: #2c3e50;
+  color:rgb(152, 158, 163);
   margin: 0;
   
   @media (min-width: 480px) {

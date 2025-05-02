@@ -154,83 +154,19 @@ const Face = styled.div`
   
   &.back {
     transform: rotateY(180deg) translateZ(30px);
-    
-    &::before, &::after {
-      content: '';
-      position: absolute;
-      width: 12px;
-      height: 12px;
-      border-radius: 50%;
-      background-color: #333;
-    }
-    
-    &::before {
-      top: 10px;
-      left: 10px;
-    }
-    
-    &::after {
-      bottom: 10px;
-      right: 10px;
-    }
-    
-    // Puntos adicionales para el 6
-    background-image: 
-      url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='60' height='60'%3E%3Ccircle cx='15' cy='30' r='6' fill='%23333'/%3E%3Ccircle cx='45' cy='30' r='6' fill='%23333'/%3E%3Ccircle cx='15' cy='15' r='6' fill='%23333'/%3E%3Ccircle cx='45' cy='15' r='6' fill='%23333'/%3E%3C/svg%3E");
+    background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='60' height='60'%3E%3Ccircle cx='15' cy='15' r='6' fill='%23333'/%3E%3Ccircle cx='45' cy='15' r='6' fill='%23333'/%3E%3Ccircle cx='15' cy='45' r='6' fill='%23333'/%3E%3Ccircle cx='45' cy='45' r='6' fill='%23333'/%3E%3Ccircle cx='15' cy='30' r='6' fill='%23333'/%3E%3Ccircle cx='45' cy='30' r='6' fill='%23333'/%3E%3C/svg%3E");
     font-size: 0;
   }
   
   &.right {
     transform: rotateY(90deg) translateZ(30px);
-    
-    &::before, &::after {
-      content: '';
-      position: absolute;
-      width: 12px;
-      height: 12px;
-      border-radius: 50%;
-      background-color: #333;
-    }
-    
-    &::before {
-      top: 10px;
-      left: 10px;
-    }
-    
-    &::after {
-      bottom: 10px;
-      right: 10px;
-    }
-    
-    // Punto central para el 3
-    background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='60' height='60'%3E%3Ccircle cx='30' cy='30' r='6' fill='%23333'/%3E%3C/svg%3E");
+    background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='60' height='60'%3E%3Ccircle cx='30' cy='15' r='6' fill='%23333'/%3E%3Ccircle cx='30' cy='30' r='6' fill='%23333'/%3E%3Ccircle cx='30' cy='45' r='6' fill='%23333'/%3E%3C/svg%3E");
     font-size: 0;
   }
   
   &.left {
     transform: rotateY(-90deg) translateZ(30px);
-    
-    &::before, &::after {
-      content: '';
-      position: absolute;
-      width: 12px;
-      height: 12px;
-      border-radius: 50%;
-      background-color: #333;
-    }
-    
-    &::before {
-      top: 10px;
-      left: 10px;
-    }
-    
-    &::after {
-      bottom: 10px;
-      right: 10px;
-    }
-    
-    // Puntos adicionales para el 4
-    background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='60' height='60'%3E%3Ccircle cx='15' cy='45' r='6' fill='%23333'/%3E%3Ccircle cx='45' cy='45' r='6' fill='%23333'/%3E%3C/svg%3E");
+    background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='60' height='60'%3E%3Ccircle cx='15' cy='15' r='6' fill='%23333'/%3E%3Ccircle cx='45' cy='15' r='6' fill='%23333'/%3E%3Ccircle cx='15' cy='45' r='6' fill='%23333'/%3E%3Ccircle cx='45' cy='45' r='6' fill='%23333'/%3E%3C/svg%3E");
     font-size: 0;
   }
   
@@ -263,28 +199,7 @@ const Face = styled.div`
   
   &.bottom {
     transform: rotateX(-90deg) translateZ(30px);
-    
-    &::before, &::after {
-      content: '';
-      position: absolute;
-      width: 12px;
-      height: 12px;
-      border-radius: 50%;
-      background-color: #333;
-    }
-    
-    &::before {
-      top: 10px;
-      left: 10px;
-    }
-    
-    &::after {
-      bottom: 10px;
-      right: 10px;
-    }
-    
-    // Punto central para el 5
-    background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='60' height='60'%3E%3Ccircle cx='30' cy='30' r='6' fill='%23333'/%3E%3C/svg%3E");
+    background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='60' height='60'%3E%3Ccircle cx='15' cy='15' r='6' fill='%23333'/%3E%3Ccircle cx='45' cy='15' r='6' fill='%23333'/%3E%3Ccircle cx='30' cy='30' r='6' fill='%23333'/%3E%3Ccircle cx='15' cy='45' r='6' fill='%23333'/%3E%3Ccircle cx='45' cy='45' r='6' fill='%23333'/%3E%3C/svg%3E");
     font-size: 0;
   }
   
@@ -297,26 +212,27 @@ const Face = styled.div`
     
     &.front {
       transform: translateZ(40px);
+      background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='80' height='80'%3E%3Ccircle cx='40' cy='40' r='10' fill='%23333'/%3E%3C/svg%3E");
     }
     
     &.back {
       transform: rotateY(180deg) translateZ(40px);
+      background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='80' height='80'%3E%3Ccircle cx='20' cy='20' r='8' fill='%23333'/%3E%3Ccircle cx='60' cy='20' r='8' fill='%23333'/%3E%3Ccircle cx='20' cy='60' r='8' fill='%23333'/%3E%3Ccircle cx='60' cy='60' r='8' fill='%23333'/%3E%3Ccircle cx='20' cy='40' r='8' fill='%23333'/%3E%3Ccircle cx='60' cy='40' r='8' fill='%23333'/%3E%3C/svg%3E");
     }
     
     &.right {
       transform: rotateY(90deg) translateZ(40px);
+      background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='80' height='80'%3E%3Ccircle cx='40' cy='20' r='8' fill='%23333'/%3E%3Ccircle cx='40' cy='40' r='8' fill='%23333'/%3E%3Ccircle cx='40' cy='60' r='8' fill='%23333'/%3E%3C/svg%3E");
     }
     
     &.left {
       transform: rotateY(-90deg) translateZ(40px);
-    }
-    
-    &.top {
-      transform: rotateX(90deg) translateZ(40px);
+      background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='80' height='80'%3E%3Ccircle cx='20' cy='20' r='8' fill='%23333'/%3E%3Ccircle cx='60' cy='20' r='8' fill='%23333'/%3E%3Ccircle cx='20' cy='60' r='8' fill='%23333'/%3E%3Ccircle cx='60' cy='60' r='8' fill='%23333'/%3E%3C/svg%3E");
     }
     
     &.bottom {
       transform: rotateX(-90deg) translateZ(40px);
+      background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='80' height='80'%3E%3Ccircle cx='20' cy='20' r='8' fill='%23333'/%3E%3Ccircle cx='60' cy='20' r='8' fill='%23333'/%3E%3Ccircle cx='40' cy='40' r='8' fill='%23333'/%3E%3Ccircle cx='20' cy='60' r='8' fill='%23333'/%3E%3Ccircle cx='60' cy='60' r='8' fill='%23333'/%3E%3C/svg%3E");
     }
   }
 `;

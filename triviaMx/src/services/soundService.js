@@ -6,9 +6,11 @@
 import diceRollSound from '../assets/sounds/dice-roll.mp3';
 import correctAnswerSound from '../assets/sounds/correct-answer.mp3';
 import wrongAnswerSound from '../assets/sounds/wrong-answer.mp3';
-import gameWinSound from '../assets/sounds/game-win.mp3';
+import gameWinSound from '../assets/sounds/powerUp.mp3';
 import gameOverSound from '../assets/sounds/Sad-Trombone.mp3';
 import criticalTimeSound from '../assets/sounds/tenSeconds.mp3';
+import walkingSound from '../assets/sounds/Running.mp3';
+import teleportSound from '../assets/sounds/teleport.mp3';
 
 // Crear instancias de audio para cada efecto
 const diceRoll = new Audio(diceRollSound);
@@ -17,6 +19,8 @@ const wrongAnswer = new Audio(wrongAnswerSound);
 const gameWin = new Audio(gameWinSound);
 const gameOver = new Audio(gameOverSound);
 const criticalTime = new Audio(criticalTimeSound);
+const walking = new Audio(walkingSound);
+const teleport = new Audio(teleportSound);
 
 // Estado global de sonido
 let soundEnabled = true;
@@ -60,6 +64,26 @@ const soundService = {
       correctAnswer.play().catch(error => console.warn('Error reproduciendo sonido:', error));
     }
   },
+
+   /**
+   * Reproducir sonido de walking 
+   */
+   playMove: () => {
+    if (soundEnabled) {
+      walking.currentTime = 16;
+      walking.play().catch(error => console.warn('Error reproduciendo sonido:', error));
+    }
+  },
+
+    /**
+   * Reproducir sonido de teleport 
+   */
+    playTeleport: () => {
+      if (soundEnabled) {
+        teleport.currentTime = 0;
+        teleport.play().catch(error => console.warn('Error reproduciendo sonido:', error));
+      }
+    },
   
   /**
    * Reproducir sonido de respuesta incorrecta

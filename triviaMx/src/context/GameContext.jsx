@@ -22,6 +22,9 @@ export const GameProvider = ({ children }) => {
   const [winner, setWinner] = useState(null);
   const [selectedAnswer, setSelectedAnswer] = useState(null);
   const [answerStatus, setAnswerStatus] = useState(null); // 'correct', 'incorrect', null
+  const [animatingPlayer, setAnimatingPlayer] = useState(false);
+  const [animationPosition, setAnimationPosition] = useState(0);
+  const [isPlayerTurn, setIsPlayerTurn] = useState(true); // Add this state
   
   // Constantes del juego
   const BOARD_SIZE = 50;
@@ -93,10 +96,16 @@ export const GameProvider = ({ children }) => {
       soundService.playWrongAnswer();
     }
     
-    // Avanzar al jugador correspondiente después de 2 segundos
+    // Primero, mostrar el resultado durante 2 segundos
     setTimeout(() => {
-      movePlayer(isCorrect);
-    }, 2000);
+      // Después de 2 segundos, cerrar la ventana modal
+      setCurrentQuestion(null);
+      
+      // Después de que se cierre la modal, esperar un tiempo breve y luego mover la ficha
+      setTimeout(() => {
+        movePlayer(isCorrect);
+      }, 1500); // Esperar 500ms DESPUÉS de cerrar la modal para mover la ficha
+    }, 1500);
   };
   
   // Manejar tiempo agotado
@@ -107,35 +116,146 @@ export const GameProvider = ({ children }) => {
     // Reproducir sonido de respuesta incorrecta
     soundService.playWrongAnswer();
     
-    // Avanzar a la "ignorancia" después de 2 segundos
+    // Primero, mostrar el resultado durante 2 segundos
     setTimeout(() => {
-      movePlayer(false);
-    }, 2000);
+      // Después de 2 segundos, cerrar la ventana modal
+      setCurrentQuestion(null);
+      
+      // Después de que se cierre la modal, esperar un tiempo breve y luego mover la ficha
+      setTimeout(() => {
+        movePlayer(false);
+      }, 1500); // Esperar 500ms DESPUÉS de cerrar la modal para mover la ficha
+    }, 1500);
   };
   
   // Mover jugador
   const movePlayer = (isPlayerMoving) => {
+    setIsPlayerTurn(isPlayerMoving);
+    
     if (isPlayerMoving) {
       // El jugador avanza
-      const newPosition = Math.min(playerPosition + currentDice, BOARD_SIZE);
-      setPlayerPosition(newPosition);
+      const startPosition = playerPosition;
+      const endPosition = Math.min(playerPosition + currentDice, BOARD_SIZE);
       
-      if (newPosition === BOARD_SIZE) {
+      // Iniciar la animación
+      animateMovement(startPosition, endPosition, true);
+    } else {
+      // La "ignorancia" avanza
+      const startPosition = ignorancePosition;
+      const endPosition = Math.min(ignorancePosition + currentDice, BOARD_SIZE);
+      
+      // Iniciar la animación
+      animateMovement(startPosition, endPosition, false);
+    }
+  };
+
+  // Nueva función para animar el movimiento
+  const animateMovement = (start, end, isPlayer) => {
+    // Establecer estado de animación
+    setAnimatingPlayer(true);
+    setAnimationPosition(start);
+    
+    // Reproducir sonido de movimiento
+    soundService.playMove();
+    
+    let currentPos = start;
+    
+    // Función para el movimiento paso a paso
+    const moveStep = () => {
+      // Incrementamos la posición
+      currentPos++;
+      
+      // Actualizamos la posición de animación
+      setAnimationPosition(currentPos);
+      
+      // Si llegamos a la posición final
+      if (currentPos >= end) {
+        // Comprobar si es una casilla especial (11, 22, 33, 44)
+        if ([11, 22, 33, 44].includes(end)) {
+          // Vamos a esperar un momento antes de teletransportar
+          setTimeout(() => {
+            handleSpecialSquare(end, isPlayer);
+          }, 500);
+        } else {
+          // Actualizar la posición final del jugador o ignorancia
+          finalizeMovement(end, isPlayer);
+        }
+        
+        return;
+      }
+      
+      // Si no hemos llegado al final, programar el siguiente paso
+      setTimeout(moveStep, 300); // Velocidad de la animación (300ms por casilla)
+    };
+    
+    // Iniciar el movimiento después de un breve retraso
+    setTimeout(moveStep, 200);
+  };
+
+  // Función para manejar casillas especiales (11, 22, 33, 44)
+  const handleSpecialSquare = (position, isPlayer) => {
+    let minRange, maxRange;
+    
+    // Determinar el rango según la casilla
+    switch (position) {
+      case 11:
+        minRange = 1;
+        maxRange = 21;
+        break;
+      case 22:
+        minRange = 12;
+        maxRange = 32;
+        break;
+      case 33:
+        minRange = 23;
+        maxRange = 43;
+        break;
+      case 44:
+        minRange = 34;
+        maxRange = 49;
+        break;
+      default:
+        return position;
+    }
+    
+    // Generar posición aleatoria dentro del rango, excepto la posición actual
+    let newPosition;
+    do {
+      newPosition = Math.floor(Math.random() * (maxRange - minRange + 1)) + minRange;
+    } while (newPosition === position);
+    
+    // Reproducir sonido de teletransporte
+    soundService.playTeleport();
+    
+    // Actualizar temporalmente la posición para la siguiente animación
+    const startPosition = position;
+    
+    // Iniciar nueva animación desde la posición actual a la nueva posición
+    setTimeout(() => {
+      animateMovement(startPosition, newPosition, isPlayer);
+    }, 500);
+  };
+
+  // Función para finalizar el movimiento
+  const finalizeMovement = (position, isPlayer) => {
+    // Actualizar la posición final del jugador o ignorancia
+    if (isPlayer) {
+      setPlayerPosition(position);
+      if (position === BOARD_SIZE) {
         endGame('player');
       }
     } else {
-      // La "ignorancia" avanza
-      const newPosition = Math.min(ignorancePosition + currentDice, BOARD_SIZE);
-      setIgnorancePosition(newPosition);
-      
-      if (newPosition === BOARD_SIZE) {
+      setIgnorancePosition(position);
+      if (position === BOARD_SIZE) {
         endGame('ignorance');
       }
     }
     
+    // Terminar animación
+    setAnimatingPlayer(false);
+    
     // Preparar el siguiente turno si el juego no ha terminado
     if (!gameOver) {
-      setCurrentQuestion(null);
       // No reseteamos el currentDice para poder mostrar el último valor
     }
   };
@@ -209,6 +329,9 @@ export const GameProvider = ({ children }) => {
     rollDice,
     selectAnswer,
     resetGame,
+    animatingPlayer,     // Add animation state
+    animationPosition,   // Add animation position
+    isPlayerTurn,        // Add isPlayerTurn to the context value
   };
   
   return <GameContext.Provider value={value}>{children}</GameContext.Provider>;
