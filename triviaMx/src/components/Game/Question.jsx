@@ -16,7 +16,7 @@ const Question = () => {
   if (!currentQuestion) return null;
   
   const category = CATEGORIES[currentDice];
-  const isTimeCritical = timer <= 5;
+  const isTimeCritical = timer <= 10;
   
   return (
     <QuestionContainer>

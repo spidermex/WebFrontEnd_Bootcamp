@@ -2,6 +2,9 @@ import React, { useRef, useEffect, useState } from 'react';
 import styled from 'styled-components';
 import Square from './Square';
 import { useGame } from '../../context/GameContext';
+import ignoranceImage from '../../assets/images/alien-3.svg';
+import playerImage from '../../assets/images/ufo.png';
+
 
 /**
  * Componente que representa el tablero de juego completo
@@ -166,27 +169,28 @@ const Board = () => {
   
   return (
     <BoardContainer>
-      <BoardGrid ref={boardRef} orientation={orientation}>
-        {renderBoard()}
-      </BoardGrid>
       <PlayerInfoContainer>
         <PlayerInfo>
           <PlayerIndicator player="player">
             <PlayerDot player="player" />
             <PlayerText>
-              <PlayerName>Tú</PlayerName>
+              {/* <PlayerName>Tú</PlayerName>  */}
               <PositionIndicator>Casilla {playerPosition}</PositionIndicator>
             </PlayerText>
           </PlayerIndicator>
           <PlayerIndicator player="ignorance">
             <PlayerDot player="ignorance" />
             <PlayerText>
-              <PlayerName>Ignorancia</PlayerName>
+              {/* <PlayerName>Ignorancia</PlayerName> */}
               <PositionIndicator>Casilla {ignorancePosition}</PositionIndicator>
             </PlayerText>
           </PlayerIndicator>
         </PlayerInfo>
       </PlayerInfoContainer>
+      <BoardGrid ref={boardRef} orientation={orientation}>
+        {renderBoard()}
+      </BoardGrid>
+      
     </BoardContainer>
   );
 };
@@ -208,7 +212,7 @@ const BoardGrid = styled.div`
   width: 100%;
   gap: 0; /* Eliminar espacio vertical entre filas */
   padding: ${props => props.orientation === 'portrait' ? '5px' : '10px'};
-  background-image: url('/src/assets/carretera.png');
+  background-image: url('src/assets/images/hubble-space.jpg');
   background-size: cover;
   background-position: center;
   border-radius: 8px;
@@ -240,9 +244,11 @@ const BoardGrid = styled.div`
 `;
 
 const PlayerInfoContainer = styled.div`
+
   width: 100%;
-  margin-top: 10px;
+  margin-top: 0;
   overflow-x: hidden;
+  margin-bottom: 5px;
   
   @media (min-width: 768px) {
     margin-top: 20px;
@@ -258,7 +264,7 @@ const PlayerInfo = styled.div`
   width: 100%;
   
   @media (max-width: 380px) {
-    flex-direction: column;
+    flex-direction: row;
     align-items: center;
   }
   
@@ -301,8 +307,11 @@ const PlayerName = styled.span`
 const PlayerDot = styled.div`
   width: 15px;
   height: 15px;
-  border-radius: 50%;
-  background-color: ${props => props.player === 'player' ? '#3498db' : '#e74c3c'};
+  background-image: ${props => props.player === 'ignorance' ? `url(${ignoranceImage})` : `url(${playerImage})`};
+  background-size: contain;
+  background-repeat: no-repeat;
+  background-position: center;
+  background-color: transparent;
   flex-shrink: 0;
 `;
 

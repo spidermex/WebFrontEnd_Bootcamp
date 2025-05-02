@@ -1,5 +1,9 @@
 import React from 'react';
 import styled from 'styled-components';
+// Importar la imagen de fondo
+import blackHoleImage from '../../assets/images/black-hole.svg';
+import ignoranceImage from '../../assets/images/alien-3.svg';
+import playerImage from '../../assets/images/ufo.png';
 
 /**
  * Componente que representa una casilla individual del tablero
@@ -35,8 +39,12 @@ const StyledSquare = styled.div`
   display: flex;
   align-items: center;
   justify-content: center;
+  background-image: ${props => props.isVerticalColumn ? `url(${blackHoleImage})` : 'none'};
+  background-size: 70%;
+  background-repeat: no-repeat;
+  background-position: center;
   background-color: ${props => props.isVerticalColumn 
-    ? 'rgba(255, 243, 224, 0.8)' 
+    ? 'rgba(255, 243, 224, 0.3)'
     : 'rgba(255, 255, 255, 0.7)'
   };
   transition: all 0.2s ease;
@@ -106,9 +114,14 @@ const PlayersContainer = styled.div`
 const PlayerPiece = styled.div`
   width: 12px;
   height: 12px;
-  border-radius: 50%;
-  background-color: ${props => props.player === 'player' ? '#3498db' : '#e74c3c'};
-  
+  z-index: 11;
+  color: black;
+   border-radius: 50%; 
+   background-color:transparent; 
+  background-image: ${props => props.player === "ignorance" ? `url(${ignoranceImage})` : `url(${playerImage})`};
+  background-size: contain;
+  background-repeat: no-repeat;
+  background-position: center;
   @media (min-width: 480px) {
     width: 14px;
     height: 14px;
