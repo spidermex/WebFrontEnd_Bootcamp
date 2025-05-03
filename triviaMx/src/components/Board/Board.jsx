@@ -4,7 +4,7 @@ import Square from './Square';
 import { useGame } from '../../context/GameContext';
 import ignoranceImage from '../../images/alien-3.svg';
 import playerImage from '../../images/ufo.png';
-import boardBackground from '../../images/hubble-space.jpg';
+import boardBackground from '../../images/hubble-space.png';
 
 
 /**

@@ -37,7 +37,7 @@ const Square = ({ number, ...rest }) => {
   const isVerticalColumn = [11, 22, 33, 44].includes(number);
   
   return (
-    <StyledSquare isActive={isActive} isVerticalColumn={isVerticalColumn} {...rest}>
+    <StyledSquare isactive={isActive} isVerticalColumn={isVerticalColumn} {...rest}>
       <SquareNumber>{number}</SquareNumber>
       <PlayersContainer>
         {/* Show player in this square if:
@@ -85,7 +85,7 @@ const StyledSquare = styled.div`
   box-sizing: border-box;
   
   // Destacar casillas con jugadores
-  ${props => props.isActive && `
+  ${props => props.isactive && `
     border: 2px solid #f39c12;
     box-shadow: 0 0 5px rgba(243, 156, 18, 0.5);
     z-index: 2;
