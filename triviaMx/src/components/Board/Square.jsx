@@ -2,9 +2,9 @@ import React from 'react';
 import styled from 'styled-components';
 import { useGame } from '../../context/GameContext';
 // Importar la imagen de fondo
-import blackHoleImage from '/public/images/black-hole.svg';
-import ignoranceImage from '/public/images/alien-3.svg';
-import playerImage from '/public/images/ufo.png';
+import blackHoleImage from '../../images/black-hole.svg';
+import ignoranceImage from '../../images/alien-3.svg';
+import playerImage from '../../images/ufo.png';
 
 /**
  * Componente que representa una casilla individual del tablero

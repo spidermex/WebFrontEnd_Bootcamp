@@ -2,8 +2,9 @@ import React, { useRef, useEffect, useState } from 'react';
 import styled from 'styled-components';
 import Square from './Square';
 import { useGame } from '../../context/GameContext';
-import ignoranceImage from '/public/images/alien-3.svg';
-import playerImage from '/public/images/ufo.png';
+import ignoranceImage from '../../images/alien-3.svg';
+import playerImage from '../../images/ufo.png';
+import boardBackground from '../../images/hubble-space.jpg';
 
 
 /**
@@ -212,7 +213,7 @@ const BoardGrid = styled.div`
   width: 100%;
   gap: 0; /* Eliminar espacio vertical entre filas */
   padding: ${props => props.orientation === 'portrait' ? '5px' : '10px'};
-  background-image: url('./images/hubble-space.jpg');
+  background-image: url(${boardBackground});
   background-size: cover;
   background-position: center;
   border-radius: 8px;

@@ -1,6 +1,8 @@
 import React, { useState } from 'react';
 import styled from 'styled-components';
 import soundService from '../../services/soundService';
+import soundOnIcon from '../../images/sound-on.svg';
+import soundOffIcon from '../../images/sound-off.svg';
 
 /**
  * Componente para activar/desactivar el sonido del juego
@@ -16,9 +18,9 @@ const SoundToggle = () => {
   return (
     <SoundButton onClick={toggleSound} soundOn={soundOn}>
       {soundOn ? (
-        <span role="img" aria-label="Sonido activado"><img src='./images/sound-on.svg'></img></span>
+        <span role="img" aria-label="Sonido activado"><img src={soundOnIcon}></img></span>
       ) : (
-        <span role="img" aria-label="Sonido desactivado"><img src='./images/sound-off.svg'></img></span>
+        <span role="img" aria-label="Sonido desactivado"><img src={soundOffIcon}></img></span>
       )}
     </SoundButton>
   );

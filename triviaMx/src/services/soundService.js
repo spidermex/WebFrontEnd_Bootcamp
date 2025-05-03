@@ -3,14 +3,14 @@
  */
 
 // Importar archivos de sonido
-import diceRollSound from '/public/sounds/dice-roll.mp3';
-import correctAnswerSound from '/public/sounds/correct-answer.mp3';
-import wrongAnswerSound from '/public/sounds/wrong-answer.mp3';
-import gameWinSound from '/public/sounds/powerUp.mp3';
-import gameOverSound from '/public/sounds/Sad-Trombone.mp3';
-import criticalTimeSound from '/public/sounds/tenSeconds.mp3';
-import walkingSound from '/public/sounds/Running.mp3';
-import teleportSound from '/public/sounds/teleport.mp3';
+import diceRollSound from '../sounds/dice-roll.mp3';
+import correctAnswerSound from '../sounds/correct-answer.mp3';
+import wrongAnswerSound from '../sounds/wrong-answer.mp3';
+import gameWinSound from '../sounds/powerUp.mp3';
+import gameOverSound from '../sounds/Sad-Trombone.mp3';
+import criticalTimeSound from '../sounds/tenSeconds.mp3';
+import walkingSound from '../sounds/Running.mp3';
+import teleportSound from '../sounds/teleport.mp3';
 
 // Crear instancias de audio para cada efecto
 const diceRoll = new Audio(diceRollSound);
