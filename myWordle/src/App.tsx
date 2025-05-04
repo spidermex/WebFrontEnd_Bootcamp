@@ -1,9 +1,13 @@
 import { useState, useEffect } from 'react'
-import './App.css'
+import './styles/App.css'
 import { Grid } from './components/Grid'
 import { Keyboard } from './components/Keyboard'
 import { checkGuess, getRandomWord } from './utils/game'
 import ReactConfetti from "react-confetti"
+import { InstructionsModal } from './components/InstructionsModal'
+import SoundToggle from './components/SoundToggle'
+import soundService from './services/soundService'
+
 
 function App() {
   const [solution, setSolution] = useState('')
@@ -41,6 +45,8 @@ function App() {
   const onEnter = () => {
     if (currentGuess.length !== 5) return
 
+    soundService.playclickEnter()
+
     const guess = currentGuess.toUpperCase()
     const results = checkGuess(guess, solution)
     updateUsedLetters(guess, results)
@@ -50,8 +56,10 @@ function App() {
 
     if (guess === solution) {
       setGameState('won')
+      soundService.playGameWin()
     } else if (guesses.length === 5) {
       setGameState('lost')
+      soundService.playGameOver()
     }
   }
 
@@ -83,6 +91,7 @@ function App() {
 
       if (e.key === 'Enter') {
         if (currentGuess.length !== 5) return
+        soundService.playclickEnter()
 
         const guess = currentGuess.toUpperCase()
         const results = checkGuess(guess, solution)
@@ -93,8 +102,10 @@ function App() {
 
         if (guess === solution) {
           setGameState('won')
+          soundService.playGameWin()
         } else if (guesses.length === 5) {
           setGameState('lost')
+          soundService.playGameOver()
         }
       } else if (e.key === 'Backspace') {
         setCurrentGuess(prev => prev.slice(0, -1))
@@ -109,27 +120,32 @@ function App() {
     return () => window.removeEventListener('keydown', handleKeydown)
   }, [currentGuess, gameState, solution, guesses.length, updateUsedLetters])
 
+
+
   return (
     <div className="game-container">
       <header>
-        <h1>Wordle ESP</h1>
+        <div className="header-content">
+          <h1> My Wordle</h1>
+          <InstructionsModal />
+          <SoundToggle />
+        </div>
         {gameState === 'won' && (          
-          <div className="message"> 
+          <div className="message success"> 
             <ReactConfetti /> 
             <p>¡Felicidades! Has ganado.</p>            
           </div> )}
+          {gameState === 'lost' && (
+          <div className="message fail">
+            <p>La palabra era: {solution}</p>
+          </div> )}
           {(gameState === 'won' || gameState=== 'lost') && <button className="new-game-button" onClick={resetGame}>
               Nueva Partida
-            </button>}
-        
+            </button>}        
       </header>
       <main>
         <Grid guesses={guesses} currentGuess={currentGuess} solution={solution} />
-        <Keyboard onKeyPress={onKeyPress} usedLetters={usedLetters} />
-        
-        {gameState === 'lost' && (
-          <div className="message">La palabra era: {solution}</div>
-        )}
+        <Keyboard onKeyPress={onKeyPress} usedLetters={usedLetters} />    
       </main>
     </div>
   )

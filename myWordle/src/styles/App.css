@@ -1,10 +1,27 @@
+
+body {
+  margin: 0;
+  padding: 0;
+}
 #root {
   max-width: 100%;
   margin: 0 auto;
   padding: 0rem;
   text-align: center;
+  height: 100vh;
+  margin-top: 1rem;
 }
 
+h1 {
+  font-size: 1.5rem;
+  margin: 0;
+}
+
+p {
+  font-size: 1rem;
+  margin: 0;
+  padding: 0;
+}
 .logo {
   height: 6em;
   padding: 1.5em;
@@ -47,6 +64,13 @@ header {
   align-items: center;
   gap: 1rem;
   margin-bottom: 0.5rem;
+}
+
+.header-content {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 5px;
 }
 
 .new-game-button {
@@ -160,6 +184,17 @@ header {
   background-color: #3a3a3c;
 }
 
+.message {
+  font-size: 1rem;
+  margin:0;
+}
+.message.success {
+  color: #538d4e;
+}
+.message.fail {
+  color: #debc28;
+  background-color: #3a3a3c;
+}
 @media (max-width: 500px) {
   .cell {
     width: 50px;
