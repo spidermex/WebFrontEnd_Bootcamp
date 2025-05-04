@@ -7,14 +7,21 @@ import ReactConfetti from "react-confetti"
 import { InstructionsModal } from './components/InstructionsModal'
 import SoundToggle from './components/SoundToggle'
 import soundService from './services/soundService'
+import  SplashScreen  from './components/SplashScreen'
 
 
 function App() {
+  const [showSplash, setShowSplash] = useState(true);
   const [solution, setSolution] = useState('')
   const [guesses, setGuesses] = useState<string[]>([])
   const [currentGuess, setCurrentGuess] = useState('')
   const [gameState, setGameState] = useState<'playing' | 'won' | 'lost'>('playing')
   const [usedLetters, setUsedLetters] = useState<Record<string, 'correct' | 'present' | 'absent'>>({})
+
+  // Función para ocultar el splash screen
+  const hideSplash = () => {
+    setShowSplash(false);
+  };
 
   const resetGame = () => {
     setSolution(getRandomWord())
@@ -115,14 +122,14 @@ function App() {
         }
       }
     }
-
     window.addEventListener('keydown', handleKeydown)
     return () => window.removeEventListener('keydown', handleKeydown)
   }, [currentGuess, gameState, solution, guesses.length, updateUsedLetters])
 
-
-
   return (
+    <>
+    {showSplash ? (<SplashScreen onComplete={hideSplash} />)  :
+    (
     <div className="game-container">
       <header>
         <div className="header-content">
@@ -148,6 +155,8 @@ function App() {
         <Keyboard onKeyPress={onKeyPress} usedLetters={usedLetters} />    
       </main>
     </div>
+    )}
+    </>
   )
 }
 
