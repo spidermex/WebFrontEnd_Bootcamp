@@ -26,6 +26,7 @@ function App() {
   const [entradaUsuario, setEntradaUsuario] = useState('');
   const [mensajeUsuario, setMensajeUsuario] = useState('');
   const [tipoMensaje, setTipoMensaje] = useState('info');
+  const [tieneFoco, setTieneFoco] = useState(true); // Nuevo estado para rastrear si el juego tiene foco
 
   // Game progress states
   const [tiempoRestante, setTiempoRestante] = useState(120); // 2 minutes
@@ -38,6 +39,8 @@ function App() {
 
   // Timer reference
   const timerIdRef = useRef(null);
+  // Referencia para el componente de entrada de palabras
+  const wordInputRef = useRef(null);
 
   // Function to calculate points based on word length
   const calcularPuntos = (palabra) => {
@@ -357,55 +360,58 @@ function App() {
     setEntradaUsuario('');
     setIndicesSeleccionados([]);
     setLetrasActuales(shuffle([...letrasActuales]));
+
+    // Asegurarse de que el componente WordInput mantenga el foco después de mezclar
+    if (wordInputRef.current) {
+      wordInputRef.current.focus();
+    }
   };
 
-  // Handle input change - Actual keyboard input 
+  // Handle input change - Keyboard input 
   const handleInputChange = (e) => {
+    if (estadoJuego !== 'jugando') return;
+
     const nuevoValor = e.target.value.toLowerCase();
+
+    // Limitamos la entrada a la cantidad de letras de la palabra base
+    if (nuevoValor.length > palabraBase.length) return;
 
     // Actualizamos el valor de la entrada
     setEntradaUsuario(nuevoValor);
 
     // Al usar el teclado, debemos sincronizar los índices seleccionados
-    // Como podrían borrar o escribir cualquier cosa, lo mejor es reiniciarlos
-    // y luego intentar seleccionar las letras que coinciden con el input
     setIndicesSeleccionados([]);
 
-    // Solo intentamos hacer coincidir las letras si el usuario está agregando caracteres, no eliminando
-    if (nuevoValor.length > entradaUsuario.length) {
-      // Obtenemos la última letra ingresada
-      const ultimaLetra = nuevoValor[nuevoValor.length - 1];
+    // Intentamos hacer coincidir cada letra ingresada con las letras disponibles
+    const letrasDisponibles = [...letrasActuales];
+    let indicesUsados = [];
 
-      // Buscamos un índice disponible (no usado) que coincida con esta letra
-      const letrasDisponibles = [...letrasActuales];
-      const indiceLetrasActuales = [];
+    // Para cada caracter en el input, buscamos una letra disponible
+    for (const char of nuevoValor) {
+      const indiceLetra = letrasDisponibles.findIndex((letra, idx) => {
+        // La letra coincide y no ha sido usada ya
+        return letra === char && !indicesUsados.includes(idx);
+      });
 
-      // Primero tratamos de construir el input completo con las letras disponibles
-      let inputRestante = nuevoValor;
-      let indicesUsados = [];
-
-      // Para cada caracter en el input, buscamos una letra disponible
-      for (const char of nuevoValor) {
-        const indiceLetra = letrasDisponibles.findIndex((letra, idx) => {
-          // La letra coincide y no ha sido usada ya
-          return letra === char && !indicesUsados.includes(idx);
-        });
-
-        if (indiceLetra !== -1) {
-          indicesUsados.push(indiceLetra);
-        }
+      if (indiceLetra !== -1) {
+        indicesUsados.push(indiceLetra);
       }
+    }
 
-      // Si pudimos encontrar índices para todas las letras del input,
-      // actualizamos los índices seleccionados
-      if (indicesUsados.length === nuevoValor.length) {
-        setIndicesSeleccionados(indicesUsados);
-      }
+    // Si pudimos encontrar índices para todas las letras del input,
+    // actualizamos los índices seleccionados
+    if (indicesUsados.length === nuevoValor.length) {
+      setIndicesSeleccionados(indicesUsados);
     }
   };
 
-  // Nueva función para manejar clics en las letras
+  // Función para manejar clics en las letras
   const handleLetterClick = (letra, index) => {
+    if (estadoJuego !== 'jugando') return;
+
+    // Si la letra ya está seleccionada, no hacemos nada
+    if (indicesSeleccionados.includes(index)) return;
+
     // Añadir la letra a la entrada del usuario
     setEntradaUsuario(prev => prev + letra);
 
@@ -419,6 +425,11 @@ function App() {
       setTimeout(() => {
         handleSubmit();
       }, 300);
+    }
+
+    // Mantener el foco en el componente de entrada
+    if (wordInputRef.current) {
+      wordInputRef.current.focus();
     }
   };
 
@@ -484,6 +495,11 @@ function App() {
       setMensajeUsuario("Palabra inválida. Intenta con otra.");
       setTipoMensaje('error');
     }
+
+    // Mantener el foco en el componente de entrada
+    if (wordInputRef.current) {
+      wordInputRef.current.focus();
+    }
   };
 
   // Update slots when a word is found
@@ -534,6 +550,25 @@ function App() {
     }
   };
 
+  // Efecto para gestionar el foco de la aplicación
+  useEffect(() => {
+    const handleFocus = () => setTieneFoco(true);
+    const handleBlur = () => setTieneFoco(false);
+
+    window.addEventListener('focus', handleFocus);
+    window.addEventListener('blur', handleBlur);
+
+    // Inicialmente dar foco al componente de entrada cuando el juego comienza
+    if (wordInputRef.current && estadoJuego === 'jugando') {
+      wordInputRef.current.focus();
+    }
+
+    return () => {
+      window.removeEventListener('focus', handleFocus);
+      window.removeEventListener('blur', handleBlur);
+    };
+  }, [estadoJuego]);
+
   // Initialize the game when the component mounts
   useEffect(() => {
     iniciarNuevaRonda();
@@ -562,7 +597,16 @@ function App() {
       {error && <div className="error-message">{error}</div>}
 
       {!isLoading && !error && (
-        <div className="game-area">
+        <div
+          className="game-area"
+          onClick={() => {
+            // Asegurar que al hacer clic en cualquier parte del juego, 
+            // el componente WordInput reciba el foco
+            if (wordInputRef.current && estadoJuego === 'jugando') {
+              wordInputRef.current.focus();
+            }
+          }}
+        >
           {/* Game header with timer and score */}
           <div className="game-stats">
             <TimerDisplay seconds={tiempoRestante} />
@@ -583,11 +627,13 @@ function App() {
 
           {/* Word input form */}
           <WordInput
+            ref={wordInputRef}
             value={entradaUsuario}
             onChange={handleInputChange}
             onSubmit={handleSubmit}
             placeholder="Escribe o haz clic en las letras para formar palabras..."
             disabled={estadoJuego !== 'jugando'}
+            maxLength={palabraBase.length}
           />
           <div className="controls">
             <GameButton
@@ -597,14 +643,19 @@ function App() {
             >
               Mezclar
             </GameButton>
+            <GameButton
+              onClick={handleSubmit}
+              type="highlight"
+              disabled={estadoJuego !== 'jugando' || entradaUsuario.length === 0}
+            >
+              Enviar
+            </GameButton>
           </div>
           {/* User feedback message */}
           <UserMessage
             message={mensajeUsuario}
             type={tipoMensaje}
           />
-
-
 
           {/* Play again button */}
           {(estadoJuego === 'ganado' || estadoJuego === 'perdido') && (

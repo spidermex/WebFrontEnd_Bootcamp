@@ -1,5 +1,5 @@
 .found-words-container {
-  background-color: rgba(0, 0, 0, 0.2);
+  background-color: rgba(26, 147, 246, 0.2);
   padding: 10px;
   border-radius: 8px;
   margin-top: 0;
@@ -11,12 +11,12 @@
 .found-words-container h2 {
   text-align: center;
   color: white;
-  margin-bottom: 15px;
-  font-size: 1.3rem;
+  margin-bottom: 10px;
+  font-size: 1rem;
 }
 
 .length-group {
-  margin-bottom: 10px;
+  margin-bottom: 0px;
 }
 
 .length-title {
@@ -28,13 +28,14 @@
   padding: 3px 0;
   background-color: rgba(0, 0, 0, 0.2);
   border-radius: 4px;
+  display: none;
 }
 
 .words-grid {
   display: flex;
   flex-wrap: wrap;
-  justify-content: center;
-  gap: 8px;
+  justify-content:flex-start;
+  gap: 10px;
 }
 
 .word-container {
@@ -86,7 +87,7 @@
 
 .not-found .word-tile-filled {
   opacity: 0.6;
-  text-decoration: line-through;
+  /* text-decoration: line-through; */
   background-color: #f8d7da;
 }
 

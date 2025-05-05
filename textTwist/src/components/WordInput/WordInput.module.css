@@ -1,29 +1,17 @@
-.wordForm {
+.wordInputWrapper {
   display: flex;
+  flex-direction: column;
+  align-items: center;
   width: 100%;
   max-width: 320px;
-  margin: 0.5rem 0;
-  gap: 0.5rem;
+  margin: 0 auto;
 }
 
-.wordInput {
-  flex: 1;
-  padding: 0.75rem;
-  font-size: 1rem;
-  border: 2px solid #bdc3c7;
-  border-radius: 0.25rem;
-  transition: border-color 0.3s, box-shadow 0.3s;
-  outline: none;
-}
-
-.wordInput:focus {
-  border-color: #3498db;
-  box-shadow: 0 0 0.3rem rgba(52, 152, 219, 0.5);
-}
-
-.wordInput:disabled {
-  background-color: #ecf0f1;
-  cursor: not-allowed;
+.buttonContainer {
+  display: flex;
+  justify-content: center;
+  width: 100%;
+  margin-top: 12px;
 }
 
 .inputSlotsContainer {
@@ -31,17 +19,27 @@
   flex-wrap: wrap;
   justify-content: center;
   gap: 5px;
-  margin-bottom: 15px;
-  min-height: 55px;
+  margin-bottom: 5px;
+  min-height: 10px;
   width: 100%;
-  max-width: 320px;
-  margin-left: auto;
-  margin-right: auto;
+  position: relative;
+  padding: 1px;
+  outline: none;
+  cursor: pointer;
+}
+
+.focusable {
+  transition: all 0.2s ease;
+}
+
+.focusable:focus {
+  box-shadow: 0 0 0 2px rgba(52, 152, 219, 0.5);
+  border-radius: 8px;
 }
 
 .inputSlot {
-  width: 40px;
-  height: 40px;
+  width: 2rem;
+  height: 2rem;
   background-color: #2989d8;
   border: 1px solid #1e5799;
   border-radius: 5px;
@@ -53,23 +51,64 @@
   font-weight: bold;
   box-shadow: inset 0 0 4px rgba(0,0,0,0.4);
   text-transform: uppercase;
+  transition: all 0.2s ease;
+}
+
+.activeSlot {
+  background-color: #1e5799;
+  box-shadow: 0 0 8px #3498db;
+  position: relative;
+}
+
+.activeSlot::after {
+  content: '';
+  position: absolute;
+  bottom: 5px;
+  left: 25%;
+  width: 50%;
+  height: 2px;
+  background-color: white;
+  animation: blink 1s infinite;
+}
+
+@keyframes blink {
+  0%, 100% { opacity: 1; }
+  50% { opacity: 0; }
+}
+
+.keyboardIndicator {
+  position: absolute;
+  bottom: -22px;
+  left: 50%;
+  transform: translateX(-50%);
+  font-size: 12px;
+  color: #3498db;
+  background-color: rgba(255, 255, 255, 0.8);
+  border-radius: 4px;
+  padding: 2px 6px;
+  pointer-events: none;
+  box-shadow: 0 1px 3px rgba(0,0,0,0.2);
+}
+
+.keyboardHint {
+  display: flex;
+  align-items: center;
+}
+
+.keyboardHint::before {
+  content: '⌨️';
+  margin-right: 4px;
+  font-size: 10px;
 }
 
 /* Tablet Styles */
 @media (min-width: 768px) {
-  .wordForm {
+  .wordInputWrapper {
     max-width: 450px;
-    gap: 0.75rem;
-  }
-
-  .wordInput {
-    padding: 0.85rem 1rem;
-    font-size: 1.1rem;
   }
 
   .inputSlotsContainer {
     gap: 8px;
-    max-width: 450px;
   }
   
   .inputSlot {
@@ -77,21 +116,16 @@
     height: 50px;
     font-size: 24px;
   }
+
+  .keyboardIndicator {
+    font-size: 14px;
+    bottom: -25px;
+  }
 }
 
 /* Desktop Styles */
 @media (min-width: 1024px) {
-  .wordForm {
-    max-width: 550px;
-    gap: 1rem;
-  }
-
-  .wordInput {
-    padding: 0.9rem 1.2rem;
-    font-size: 1.15rem;
-  }
-
-  .inputSlotsContainer {
+  .wordInputWrapper {
     max-width: 550px;
   }
 }
