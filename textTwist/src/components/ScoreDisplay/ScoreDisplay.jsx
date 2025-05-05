@@ -18,7 +18,7 @@ const ScoreDisplay = ({ score, previousScore = null }) => {
   }, [score, previousScore]);
 
   return (
-    <div className={styles.scoreContainer}>
+    <div className={styles.scoreBox}>
       <span className={styles.scoreLabel}>Puntuación:</span>
       <span ref={scoreRef} className={styles.scoreValue}>{score}</span>
     </div>

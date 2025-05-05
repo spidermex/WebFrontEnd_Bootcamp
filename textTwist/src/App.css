@@ -36,12 +36,47 @@ button {
 }
 
 #root {
-  max-width: 1280px;
-  margin: 0 auto;
-  padding: 2rem;
-  text-align: center;
+  width: 100%;
+  min-height: 100vh;
+  display: flex;
+  justify-content: center;
+  align-items: flex-start;
 }
 
+/* App Container */
+.app-container {
+  width: 100%;
+  padding: 15px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  background-color: rgba(255, 255, 255, 0.9);
+  min-height: 100vh;
+}
+
+/* App Title */
+.app-title {
+  font-size: 2rem;
+  font-weight: bold;
+  text-align: center;
+  margin-bottom: 0.5rem;
+}
+
+/* Game Stats Area */
+.game-stats {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  width: 100%;
+  margin-bottom: 0;
+  gap: 10px;
+}
+
+.controls {
+  display: flex;
+  justify-content: center;
+}
+/* Resto del código CSS existente */
 .logo {
   height: 6em;
   padding: 1.5em;
@@ -88,7 +123,7 @@ button {
 
 h1 {
   color: #2c3e50;
-  margin-bottom: 30px;
+  margin-bottom: -30px;
 }
 
 .loading, .error {
@@ -353,78 +388,17 @@ input:disabled {
   }
 }
 
-/* App Container */
-.app-container {
-  max-width: 100%;
-  padding: 1rem;
-  margin: 0 auto;
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  min-height: 100vh;
-}
-
-/* App Title */
-.app-title {
-  font-size: 1.8rem;
-  color: var(--text-main);
-  margin: 0.5rem 0 1.5rem;
-  text-align: center;
-}
-
-/* Loading and Error States */
-.loading-indicator {
-  padding: 1rem;
-  background-color: var(--bg-light);
-  border-radius: 0.5rem;
-  color: var(--text-secondary);
-  text-align: center;
-  width: 100%;
-  max-width: 320px;
-  margin: 2rem auto;
-  box-shadow: 0 2px 4px var(--shadow-light);
-}
-
-.error-message {
-  padding: 1rem;
-  background-color: #fadbd8;
-  color: var(--accent-dark);
-  border-radius: 0.5rem;
-  border-left: 4px solid var(--accent-color);
-  text-align: center;
-  width: 100%;
-  max-width: 320px;
-  margin: 2rem auto;
-  box-shadow: 0 2px 4px var(--shadow-light);
-}
-
-/* Play Again Button */
-.play-again-button {
-  margin-top: 1.5rem;
-  padding: 0.8rem 1.5rem;
-  font-size: 1.1rem;
-  font-weight: bold;
-  background-color: #9b59b6;
-  color: white;
-  border: none;
-  border-radius: 0.25rem;
-  transition: background-color 0.3s, transform 0.2s;
-  box-shadow: 0 0.2rem 0.4rem var(--shadow-medium);
-}
-
-.play-again-button:hover {
-  background-color: #8e44ad;
-  transform: translateY(-0.15rem);
-  box-shadow: 0 0.3rem 0.5rem var(--shadow-medium);
-}
-
-.play-again-button:active {
-  transform: translateY(0);
-  box-shadow: 0 0.1rem 0.2rem var(--shadow-light);
-}
-
 /* Tablet Styles */
 @media (min-width: 768px) {
+  .app-container {
+    max-width: 800px;
+    margin: 20px auto;
+    padding: 25px;
+    border-radius: 10px;
+    box-shadow: 0 5px 15px rgba(0,0,0,0.2);
+    min-height: auto;
+  }
+
   .app-title {
     font-size: 2.2rem;
     margin-bottom: 2rem;

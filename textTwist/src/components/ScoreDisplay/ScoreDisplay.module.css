@@ -1,5 +1,5 @@
 .scoreContainer {
-  padding: 0.5rem 1rem;
+  padding: 0.1rem 0.5rem;
   border-radius: 0.5rem;
   background-color: #f8f9fa;
   box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
@@ -8,17 +8,31 @@
   gap: 0.5rem;
 }
 
+.scoreBox {
+  background-color: #1c3a66;
+  color: white;
+  padding: 6px 12px;
+  border-radius: 5px;
+  border: 1px solid #4e9fef;
+  font-size: 16px;
+  text-align: center;
+  flex-grow: 1;
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+}
+
 .scoreLabel {
-  color: #7f8c8d;
-  font-size: 1rem;
+  color: white;
+  font-size: 0.9rem;
   font-weight: 500;
 }
 
 .scoreValue {
   color: #f39c12;
-  font-size: 1.3rem;
+  font-size: 1.2rem;
   font-weight: bold;
-  min-width: 3rem;
+  min-width: 2.5rem;
   text-align: right;
 }
 
@@ -45,13 +59,19 @@
     padding: 0.6rem 1.2rem;
   }
   
+  .scoreBox {
+    padding: 8px 15px;
+    font-size: 18px;
+    flex-grow: 0;
+  }
+  
   .scoreLabel {
-    font-size: 1.1rem;
+    font-size: 1rem;
   }
   
   .scoreValue {
-    font-size: 1.5rem;
-    min-width: 3.5rem;
+    font-size: 1.4rem;
+    min-width: 3rem;
   }
 }
 

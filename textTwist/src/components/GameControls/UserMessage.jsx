@@ -6,8 +6,10 @@ const UserMessage = ({ message, type }) => {
   if (!message) return null;
   
   return (
-    <div className={`${styles.messageContainer} ${styles[type]}`}>
-      {message}
+    <div className={styles.messageArea}>
+      <div className={`${styles.messageContainer} ${styles[type]}`}>
+        {message}
+      </div>
     </div>
   );
 };

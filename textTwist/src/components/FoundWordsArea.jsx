@@ -22,9 +22,34 @@ const FoundWordsArea = ({ casillas, palabrasEncontradas }) => {
     setCasillasPorLongitud(grupos);
   }, [casillas]);
 
+  // Renderiza una palabra como una fila de tiles
+  const renderPalabraTiles = (palabra, longitud) => {
+    if (palabra) {
+      // Si existe la palabra, mostramos cada letra en un tile
+      return (
+        <div className="word-row">
+          {palabra.split('').map((letra, i) => (
+            <div key={`letra-${i}`} className="word-tile-filled">
+              {letra.toUpperCase()}
+            </div>
+          ))}
+        </div>
+      );
+    } else {
+      // Si no existe, mostramos tiles vacíos
+      return (
+        <div className="word-row">
+          {Array(longitud).fill(null).map((_, i) => (
+            <div key={`empty-${i}`} className="word-tile"></div>
+          ))}
+        </div>
+      );
+    }
+  };
+
   // Renderizamos los grupos de casillas por longitud
   return (
-    <div className="found-words-area">
+    <div className="found-words-container">
       <h2>Palabras Encontradas</h2>
       
       {/* Ordenamos las longitudes de mayor a menor para mostrar primero las palabras más largas */}
@@ -32,25 +57,19 @@ const FoundWordsArea = ({ casillas, palabrasEncontradas }) => {
         .map(Number)
         .sort((a, b) => b - a)
         .map(longitud => (
-          <div key={`grupo-${longitud}`} className="palabra-grupo">
-            <h3>Palabras de {longitud} letras</h3>
-            <div className="palabra-contenedor">
+          <div key={`grupo-${longitud}`} className="length-group">
+            <div className="length-title">
+              {longitud} letras
+            </div>
+            <div className="words-grid">
               {casillasPorLongitud[longitud].map((casilla, idx) => (
                 <div 
                   key={`casilla-${longitud}-${idx}`}
-                  className={`palabra-casilla ${casilla.esBingo ? 'bingo' : ''} 
-                    ${casilla.palabra ? 'encontrada' : ''} 
-                    ${casilla.noEncontrada ? 'noEncontrada' : ''}`}
+                  className={`word-container ${casilla.esBingo ? 'bingo' : ''} 
+                    ${casilla.palabra ? 'found' : ''} 
+                    ${casilla.noEncontrada ? 'not-found' : ''}`}
                 >
-                  {casilla.palabra ? (
-                    // Si ya se encontró la palabra, la mostramos
-                    <span className="palabra-texto">{casilla.palabra}</span>
-                  ) : (
-                    // Si no, mostramos guiones bajos
-                    <span className="palabra-guiones">
-                      {Array(casilla.longitud).fill('_').join(' ')}
-                    </span>
-                  )}
+                  {renderPalabraTiles(casilla.palabra, casilla.longitud)}
                 </div>
               ))}
             </div>

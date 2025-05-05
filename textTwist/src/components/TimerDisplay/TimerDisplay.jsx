@@ -14,7 +14,7 @@ const TimerDisplay = ({ seconds }) => {
   const isTimeLow = seconds < 30;
 
   return (
-    <div className={styles.timerContainer}>
+    <div className={styles.timerBox}>
       <span className={`${styles.timer} ${isTimeLow ? styles.timerLow : ''}`}>
         {formatTime(seconds)}
       </span>

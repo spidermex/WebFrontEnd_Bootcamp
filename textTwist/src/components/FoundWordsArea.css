@@ -1,115 +1,143 @@
-.found-words-area {
-  width: 100%;
-  max-width: 700px;
-  margin: 20px auto;
-  padding: 15px;
-  background-color: #f8f9fa;
+.found-words-container {
+  background-color: rgba(0, 0, 0, 0.2);
+  padding: 10px;
   border-radius: 8px;
-  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+  margin-top: 0;
+  width: 100%;
+  overflow-y: auto;
+  max-height: 250px;
 }
 
-.found-words-area h2 {
+.found-words-container h2 {
   text-align: center;
-  color: #2c3e50;
-  margin-bottom: 20px;
-  font-size: 1.5rem;
-}
-
-.palabra-grupo {
+  color: white;
   margin-bottom: 15px;
+  font-size: 1.3rem;
 }
 
-.palabra-grupo h3 {
-  font-size: 1rem;
-  color: #7f8c8d;
-  margin-bottom: 8px;
-  padding-bottom: 5px;
-  border-bottom: 1px solid #ecf0f1;
+.length-group {
+  margin-bottom: 10px;
 }
 
-.palabra-contenedor {
+.length-title {
+  color: white;
+  text-align: center;
+  font-size: 14px;
+  margin: 10px 0 5px 0;
+  font-weight: bold;
+  padding: 3px 0;
+  background-color: rgba(0, 0, 0, 0.2);
+  border-radius: 4px;
+}
+
+.words-grid {
   display: flex;
   flex-wrap: wrap;
-  gap: 10px;
-  justify-content: flex-start;
+  justify-content: center;
+  gap: 8px;
 }
 
-.palabra-casilla {
-  display: inline-block;
-  padding: 8px 12px;
-  background-color: #ecf0f1;
-  border-radius: 4px;
-  margin-bottom: 8px;
-  min-width: 80px;
-  text-align: center;
-  transition: all 0.3s ease;
-  border: 1px solid #d5dbdb;
+.word-container {
+  margin-bottom: 2px;
 }
 
-.palabra-casilla.encontrada {
-  background-color: #d5f5e3;
-  border-color: #2ecc71;
-  animation: pulseGreen 1s;
+.word-container.bingo .word-row {
+  background-color: rgba(243, 156, 18, 0.2);
+  border-radius: 2px;
 }
 
-.palabra-casilla.bingo {
-  background-color: #ffe9a8;
-  border: 2px dashed #f1c40f;
+.word-container.found.bingo .word-row {
+  background-color: rgba(243, 156, 18, 0.4);
 }
 
-.palabra-casilla.bingo.encontrada {
-  background-color: #fad7a0;
-  border: 2px solid #f39c12;
-  animation: pulseBingo 1s;
+.word-row {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+  margin-bottom: 3px;
 }
 
-.palabra-texto {
-  font-weight: 600;
-  color: #27ae60;
-  letter-spacing: 1px;
+.word-tile {
+  width: 18px;
+  height: 18px;
+  background-color: rgba(255, 255, 255, 0.3);
+  border: 1px solid #ccc;
+  margin: 1px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  font-size: 12px;
+  font-weight: bold;
 }
 
-.palabra-guiones {
-  color: #95a5a6;
-  letter-spacing: 2px;
+.word-tile-filled {
+  width: 18px;
+  height: 18px;
+  background-color: white;
+  color: black;
+  border: 1px solid #ccc;
+  margin: 1px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  font-size: 12px;
+  font-weight: bold;
 }
 
-@keyframes pulseGreen {
+.not-found .word-tile-filled {
+  opacity: 0.6;
+  text-decoration: line-through;
+  background-color: #f8d7da;
+}
+
+@keyframes pulseFound {
   0% {
     transform: scale(1);
   }
   50% {
-    transform: scale(1.05);
+    transform: scale(1.1);
   }
   100% {
     transform: scale(1);
   }
 }
 
-@keyframes pulseBingo {
-  0% {
-    transform: scale(1);
-    box-shadow: 0 0 0 0 rgba(243, 156, 18, 0.7);
-  }
-  50% {
-    transform: scale(1.05);
-    box-shadow: 0 0 10px 5px rgba(243, 156, 18, 0.7);
-  }
-  100% {
-    transform: scale(1);
-    box-shadow: 0 0 0 0 rgba(243, 156, 18, 0.7);
-  }
+.found .word-tile-filled {
+  animation: pulseFound 0.6s;
 }
 
-/* Responsive adjustments */
-@media (max-width: 600px) {
-  .palabra-casilla {
-    min-width: 70px;
-    padding: 6px 8px;
-    font-size: 0.9rem;
+/* Tablet Styles */
+@media (min-width: 768px) {
+  .found-words-container {
+    padding: 15px;
+    max-height: 350px;
   }
   
-  .palabra-contenedor {
-    justify-content: center;
+  .length-title {
+    font-size: 16px;
+  }
+  
+  .word-tile,
+  .word-tile-filled {
+    width: 20px;
+    height: 20px;
+    font-size: 14px;
+  }
+}
+
+/* Desktop Styles */
+@media (min-width: 1024px) {
+  .found-words-container {
+    padding: 20px;
+  }
+  
+  .words-grid {
+    gap: 10px;
+  }
+  
+  .word-tile, 
+  .word-tile-filled {
+    width: 22px;
+    height: 22px;
   }
 }

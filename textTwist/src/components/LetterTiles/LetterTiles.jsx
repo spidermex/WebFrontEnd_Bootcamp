@@ -1,31 +1,31 @@
 import React from 'react';
 import PropTypes from 'prop-types';
 import styles from './LetterTiles.module.css';
+import GameButton from '../GameButton/GameButton';
 
-const LetterTiles = ({ letters, onMixLetters, disabled }) => {
+const LetterTiles = ({ letters, onLetterClick, selectedIndices, disabled }) => {
+  const handleLetterClick = (letra, index) => {
+    if (!disabled && !selectedIndices.includes(index)) {
+      onLetterClick(letra, index);
+    }
+  };
+
   return (
     <div className={styles.container}>
       <div className={styles.lettersContainer}>
         {letters.map((letra, index) => (
           <span 
             key={`letra-${index}`} 
-            className={styles.letterTile}
+            className={`${styles.letterTile} ${selectedIndices.includes(index) ? styles.selected : ''}`}
             data-letter={letra}
+            onClick={() => handleLetterClick(letra, index)}
           >
             {letra}
           </span>
         ))}
       </div>
       
-      <div className={styles.controls}>
-        <button 
-          onClick={onMixLetters}
-          className={styles.mixButton}
-          disabled={disabled}
-        >
-          Mezclar
-        </button>
-      </div>
+  
     </div>
   );
 };
@@ -33,6 +33,8 @@ const LetterTiles = ({ letters, onMixLetters, disabled }) => {
 LetterTiles.propTypes = {
   letters: PropTypes.arrayOf(PropTypes.string).isRequired,
   onMixLetters: PropTypes.func.isRequired,
+  onLetterClick: PropTypes.func.isRequired,
+  selectedIndices: PropTypes.arrayOf(PropTypes.number).isRequired,
   disabled: PropTypes.bool
 };
 

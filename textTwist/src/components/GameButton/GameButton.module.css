@@ -1,0 +1,101 @@
+.gameButton {
+  padding: 0.5rem 1rem;
+  border: none;
+  border-radius: 25px;
+  font-size: 15px;
+  font-weight: bold;
+  cursor: pointer;
+  margin: 5px;
+  text-transform: uppercase;
+  color: white;
+  box-shadow: 0 2px 5px rgba(0, 0, 0, 0.3);
+  transition: all 0.2s ease;
+  min-width: 100px;
+  text-align: center;
+  font-family: inherit;
+}
+
+.gameButton:hover:not(:disabled) {
+  transform: translateY(-2px);
+  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.35);
+}
+
+.gameButton:active:not(:disabled) {
+  transform: translateY(0);
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.25);
+}
+
+.buttonPrimary {
+  background: linear-gradient(to bottom, #3498db, #2980b9);
+}
+
+.buttonPrimary:hover:not(:disabled) {
+  background: linear-gradient(to bottom, #3ca1db, #2e8eca);
+}
+
+.buttonSecondary {
+  background: linear-gradient(to bottom, #95a5a6, #7f8c8d);
+}
+
+.buttonSecondary:hover:not(:disabled) {
+  background: linear-gradient(to bottom, #a3b1b2, #8d9a9b);
+}
+
+.buttonHighlight {
+  background: linear-gradient(to bottom, #e74c3c, #c0392b);
+}
+
+.buttonHighlight:hover:not(:disabled) {
+  background: linear-gradient(to bottom, #e95e4f, #cd483b);
+}
+
+.buttonDisabled, 
+.gameButton:disabled {
+  opacity: 0.6;
+  cursor: not-allowed;
+  transform: none;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.15);
+  background: #bdc3c7;
+}
+
+.buttonHighlight {
+  border: 2px solid #f1c40f;
+  position: relative;
+}
+
+.buttonHighlight:before {
+  content: '';
+  position: absolute;
+  top: -4px;
+  left: -4px;
+  right: -4px;
+  bottom: -4px;
+  border-radius: 28px;
+  border: 1px solid #f39c12;
+  opacity: 0;
+  transition: opacity 0.3s ease;
+}
+
+.buttonHighlight:hover:not(:disabled):before {
+  opacity: 1;
+}
+
+.actionButtons {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+  gap: 10px;
+  margin-top: 15px;
+}
+
+/* Tablet Styles */
+@media (min-width: 768px) {
+  .gameButton {
+    padding: 10px 20px;
+    font-size: 16px;
+  }
+  
+  .actionButtons {
+    gap: 12px;
+  }
+}
