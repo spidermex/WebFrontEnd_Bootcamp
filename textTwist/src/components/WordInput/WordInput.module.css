@@ -1,0 +1,90 @@
+.wordForm {
+  display: flex;
+  width: 100%;
+  max-width: 320px;
+  margin: 0.5rem 0;
+  gap: 0.5rem;
+}
+
+.wordInput {
+  flex: 1;
+  padding: 0.75rem;
+  font-size: 1rem;
+  border: 2px solid #bdc3c7;
+  border-radius: 0.25rem;
+  transition: border-color 0.3s, box-shadow 0.3s;
+  outline: none;
+}
+
+.wordInput:focus {
+  border-color: #3498db;
+  box-shadow: 0 0 0.3rem rgba(52, 152, 219, 0.5);
+}
+
+.wordInput:disabled {
+  background-color: #ecf0f1;
+  cursor: not-allowed;
+}
+
+.submitButton {
+  padding: 0.75rem 1.25rem;
+  font-size: 1rem;
+  background-color: #e74c3c;
+  color: white;
+  border: none;
+  border-radius: 0.25rem;
+  cursor: pointer;
+  transition: background-color 0.3s, transform 0.2s;
+  font-weight: 600;
+  box-shadow: 0 0.15rem 0.3rem rgba(0, 0, 0, 0.15);
+}
+
+.submitButton:hover:not(:disabled) {
+  background-color: #c0392b;
+  transform: translateY(-0.15rem);
+}
+
+.submitButton:active:not(:disabled) {
+  transform: translateY(0);
+  box-shadow: 0 0.1rem 0.2rem rgba(0, 0, 0, 0.15);
+}
+
+.submitButton:disabled {
+  opacity: 0.6;
+  cursor: not-allowed;
+}
+
+/* Tablet Styles */
+@media (min-width: 768px) {
+  .wordForm {
+    max-width: 450px;
+    gap: 0.75rem;
+  }
+
+  .wordInput {
+    padding: 0.85rem 1rem;
+    font-size: 1.1rem;
+  }
+
+  .submitButton {
+    padding: 0.85rem 1.5rem;
+    font-size: 1.1rem;
+  }
+}
+
+/* Desktop Styles */
+@media (min-width: 1024px) {
+  .wordForm {
+    max-width: 550px;
+    gap: 1rem;
+  }
+
+  .wordInput {
+    padding: 0.9rem 1.2rem;
+    font-size: 1.15rem;
+  }
+
+  .submitButton {
+    padding: 0.9rem 1.75rem;
+  }
+}
