@@ -2,7 +2,7 @@ import React, { useEffect, useRef, forwardRef, useImperativeHandle, useCallback 
 import PropTypes from 'prop-types';
 import styles from './WordInput.module.css';
 
-const WordInput = forwardRef(({ value, onChange, onSubmit, disabled, maxLength = 7 }, ref) => {
+const WordInput = forwardRef(({ value, onChange, onSubmit, onMixLetters, disabled, maxLength = 7, baseLetters }, ref) => {
   const containerRef = useRef(null);
   
   // Exponemos el método focus a través de la ref
@@ -17,6 +17,13 @@ const WordInput = forwardRef(({ value, onChange, onSubmit, disabled, maxLength =
   // Función para manejar eventos de teclado con useCallback
   const handleKeyDown = useCallback((e) => {
     if (disabled) return;
+    
+    // Manejo de la tecla Space para mezclar letras
+    if (e.key === ' ' || e.code === 'Space') {
+      e.preventDefault(); // Prevenir el comportamiento por defecto (scroll)
+      onMixLetters();
+      return;
+    }
     
     // Manejo de tecla Enter para enviar la palabra
     if (e.key === 'Enter' && value.length > 0) {
@@ -34,14 +41,28 @@ const WordInput = forwardRef(({ value, onChange, onSubmit, disabled, maxLength =
       return;
     }
     
-    // Manejo de letras (solo permitimos letras a-z)
+    // Manejo de letras
     if (/^[a-zA-Z]$/.test(e.key) && value.length < maxLength) {
-      const syntheticEvent = {
-        target: { value: value + e.key.toLowerCase() }
-      };
-      onChange(syntheticEvent);
+      const lowerKey = e.key.toLowerCase();
+      
+      // Verificar si la letra está en baseLetters y aún está disponible
+      const availableLetters = [...baseLetters.toLowerCase()];
+      const currentLetters = [...value.toLowerCase()];
+      
+      // Contar cuántas veces aparece la letra en baseLetters
+      const maxCount = availableLetters.filter(l => l === lowerKey).length;
+      // Contar cuántas veces ya se usó la letra
+      const currentCount = currentLetters.filter(l => l === lowerKey).length;
+      
+      // Solo permitir la letra si está disponible y no excede su límite
+      if (baseLetters.toLowerCase().includes(lowerKey) && currentCount < maxCount) {
+        const syntheticEvent = {
+          target: { value: value + lowerKey }
+        };
+        onChange(syntheticEvent);
+      }
     }
-  }, [disabled, value, maxLength, onChange, onSubmit]);
+  }, [disabled, value, maxLength, onChange, onSubmit, onMixLetters, baseLetters]);
   
   // Efecto para agregar y eliminar el listener de teclado
   useEffect(() => {
@@ -84,13 +105,6 @@ const WordInput = forwardRef(({ value, onChange, onSubmit, disabled, maxLength =
             {value[index] ? value[index].toUpperCase() : ''}
           </div>
         ))}
-        
-        {/* Indicador de teclado activo */}
-        {!disabled && (
-          <div className={styles.keyboardIndicator}>
-            <span className={styles.keyboardHint}>Teclado activo</span>
-          </div>
-        )}
       </div>
     </div>
   );
@@ -102,13 +116,16 @@ WordInput.propTypes = {
   value: PropTypes.string.isRequired,
   onChange: PropTypes.func.isRequired,
   onSubmit: PropTypes.func.isRequired,
+  onMixLetters: PropTypes.func.isRequired,
   disabled: PropTypes.bool,
-  maxLength: PropTypes.number
+  maxLength: PropTypes.number,
+  baseLetters: PropTypes.string
 };
 
 WordInput.defaultProps = {
   disabled: false,
-  maxLength: 7
+  maxLength: 7,
+  baseLetters: ''
 };
 
 export default WordInput;

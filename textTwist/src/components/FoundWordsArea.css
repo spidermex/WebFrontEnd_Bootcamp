@@ -75,7 +75,7 @@
   width: 18px;
   height: 18px;
   background-color: white;
-  color: black;
+  color: #0080ff;
   border: 1px solid #ccc;
   margin: 1px;
   display: flex;
@@ -88,7 +88,8 @@
 .not-found .word-tile-filled {
   opacity: 0.6;
   /* text-decoration: line-through; */
-  background-color: #f8d7da;
+  background-color: #ccc;
+  color: #dd1515;
 }
 
 @keyframes pulseFound {

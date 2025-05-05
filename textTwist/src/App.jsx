@@ -419,7 +419,7 @@ function App() {
     setIndicesSeleccionados(prev => [...prev, index]);
 
     // Verificar si ya se seleccionaron todas las letras
-    if (indicesSeleccionados.length + 1 === letrasActuales.length) {
+    if (indicesSeleccionados.length  === letrasActuales.length) {
       // Si es así, verificamos la palabra automáticamente después de un breve delay
       // para que el usuario pueda ver la última letra que seleccionó
       setTimeout(() => {
@@ -626,14 +626,15 @@ function App() {
           />
 
           {/* Word input form */}
-          <WordInput
+          <WordInput 
             ref={wordInputRef}
             value={entradaUsuario}
             onChange={handleInputChange}
             onSubmit={handleSubmit}
-            placeholder="Escribe o haz clic en las letras para formar palabras..."
+            onMixLetters={mezclarLetras}
             disabled={estadoJuego !== 'jugando'}
             maxLength={palabraBase.length}
+            baseLetters={palabraBase}
           />
           <div className="controls">
             <GameButton
