@@ -50,13 +50,36 @@ button {
   display: flex;
   flex-direction: column;
   align-items: center;
-  background-color: rgba(255, 255, 255, 0.9);
+  background-color: rgba(233, 238, 242, 0.9);
   min-height: 100vh;
+  background: radial-gradient(circle, #73a8e3 0%, #2989d8 50%, #207cca 75%, #316097 100%);
+
+}
+
+/* App Header */
+.app-header {
+  display: flex;
+  align-items: center;
+  align-content: center;
+  justify-content:space-between;
+  width: 100%;
+  padding: 0;
+  /* background-color: var(--bg-light); */
+  /* border-radius: 10px;
+  box-shadow: 0 4px 8px var(--shadow-light); */
+  margin: 0 auto;
+}
+
+.header-controls {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  gap: 10px;
 }
 
 /* App Title */
 .app-title {
-  font-size: 2rem;
+  font-size: 1.5rem;
   font-weight: bold;
   text-align: center;
   margin-bottom: 0.5rem;
@@ -78,8 +101,8 @@ button {
 }
 /* Resto del código CSS existente */
 .logo {
-  height: 6em;
-  padding: 1.5em;
+  height: 2.3em;
+  padding: 0;
   will-change: filter;
   transition: filter 300ms;
 }
@@ -122,7 +145,7 @@ button {
 }
 
 h1 {
-  color: #2c3e50;
+  color: #ccc;
   margin-bottom: -30px;
 }
 
@@ -292,7 +315,7 @@ h1 {
 }
 
 .btn-nueva-ronda {
-  margin-top: 20px;
+  margin-top: 10px;
   padding: 12px 24px;
   font-size: 18px;
   font-weight: bold;
@@ -449,5 +472,26 @@ input:disabled {
   .play-again-button {
     padding: 1rem 2.5rem;
     font-size: 1.25rem;
+  }
+
+  /* Ocultar el teclado en pantallas grandes (donde se usa un teclado físico) */
+  .keyboard-container {
+    display: none;
+  }
+}
+
+/* Mobile Styles */
+@media (max-width: 768px) {
+  .app-container {
+    padding: 10px;
+  }
+  
+  .game-area {
+    gap: 8px;
+  }
+  
+  .controls {
+    flex-wrap: wrap;
+    justify-content: center;
   }
 }

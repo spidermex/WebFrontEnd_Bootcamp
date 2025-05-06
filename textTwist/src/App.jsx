@@ -1,7 +1,7 @@
 import { useState, useEffect, useRef } from 'react'
 import './App.css'
 import utilsFunciones from './utils/funciones.js'
-import FoundWordsArea from './components/FoundWordsArea'
+import FoundWordsArea from './components/FoundWordsArea/FoundWordsArea'
 import LetterTiles from './components/LetterTiles/LetterTiles'
 import TimerDisplay from './components/TimerDisplay/TimerDisplay'
 import ScoreDisplay from './components/ScoreDisplay/ScoreDisplay'
@@ -9,6 +9,12 @@ import WordInput from './components/WordInput/WordInput'
 import UserMessage from './components/GameControls/UserMessage'
 import GameButton from './components/GameButton/GameButton'
 import ActionButtons from './components/GameButton/ActionButtons'
+import Keyboard from './components/Keyboard/Keyboard'
+import SoundToggle from './components/SoundToggle/SoundToggle.jsx'
+import { InstructionsModal } from './components/InstructionsModal/InstructionsModal.jsx'
+import soundService from './utils/soundService.js'
+import logo from './images/giroDePalabras-logo1.png'
+
 
 function App() {
   // Game state
@@ -103,11 +109,11 @@ function App() {
 
     // Mensaje según el resultado
     if (gano) {
-      setMensajeUsuario(`¡Felicidades! Has encontrado ${haEncontradoPalabraBingo ? 'una palabra bingo' : 'la palabra bingo principal'}.`);
-      setTipoMensaje('success');
+      soundService.playGameWin();
+      mostrarMensaje(`¡Felicidades! Has encontrado ${haEncontradoPalabraBingo ? 'una palabra bingo' : 'la palabra bingo principal'}.`, 'success');
     } else {
-      setMensajeUsuario(`¡Tiempo agotado! No encontraste ninguna palabra bingo. La palabra base era "${palabraBase}".`);
-      setTipoMensaje('error');
+      soundService.playGameOver();
+      mostrarMensaje(`¡Tiempo agotado! No encontraste ninguna palabra bingo. La palabra base era "${palabraBase}".`, 'error');
     }
 
     mostrarPalabrasNoEncontradas();
@@ -419,7 +425,7 @@ function App() {
     setIndicesSeleccionados(prev => [...prev, index]);
 
     // Verificar si ya se seleccionaron todas las letras
-    if (indicesSeleccionados.length  === letrasActuales.length) {
+    if (indicesSeleccionados.length === letrasActuales.length) {
       // Si es así, verificamos la palabra automáticamente después de un breve delay
       // para que el usuario pueda ver la última letra que seleccionó
       setTimeout(() => {
@@ -433,13 +439,84 @@ function App() {
     }
   };
 
+  // Función para manejar las teclas presionadas en el teclado virtual
+  const handleKeyPress = (key) => {
+    if (estadoJuego !== 'jugando') return;
+
+    if (key === 'ENTER') {
+      handleSubmit();
+      return;
+    }
+
+    if (key === '⌫') {
+      // Eliminar la última letra y su índice seleccionado
+      if (entradaUsuario.length > 0) {
+        setEntradaUsuario(prev => prev.slice(0, -1));
+        setIndicesSeleccionados(prev => prev.slice(0, -1));
+      }
+      return;
+    }
+
+    // Para letras normales
+    const lowerKey = key.toLowerCase();
+
+    // Limitar a la longitud máxima
+    if (entradaUsuario.length >= palabraBase.length) return;
+
+    // Verificar si la letra está disponible (no usada previamente)
+    const letrasDisponibles = [...letrasActuales];
+    const letrasUsadas = [...indicesSeleccionados].map(idx => letrasActuales[idx]);
+
+    // Contar cuántas veces aparece cada letra en las letras disponibles
+    const letrasConteo = {};
+    letrasDisponibles.forEach(letra => {
+      letrasConteo[letra] = (letrasConteo[letra] || 0) + 1;
+    });
+
+    // Contar cuántas veces se ha usado cada letra
+    const letrasUsadasConteo = {};
+    letrasUsadas.forEach(letra => {
+      letrasUsadasConteo[letra] = (letrasUsadasConteo[letra] || 0) + 1;
+    });
+
+    // Verificar si aún podemos usar esta letra
+    if ((letrasConteo[lowerKey] || 0) > (letrasUsadasConteo[lowerKey] || 0)) {
+      // Encontrar el índice de la letra no usada
+      const indiceLetra = letrasDisponibles.findIndex((letra, idx) =>
+        letra === lowerKey && !indicesSeleccionados.includes(idx)
+      );
+
+      if (indiceLetra !== -1) {
+        setEntradaUsuario(prev => prev + lowerKey);
+        setIndicesSeleccionados(prev => [...prev, indiceLetra]);
+      }
+    }
+
+    // Mantener el foco en el componente de entrada
+    if (wordInputRef.current) {
+      wordInputRef.current.focus();
+    }
+  };
+
   // Check if a word is valid
   const esPalabraValida = (palabra) => {
     return todasLasPalabrasPosibles.includes(palabra);
   };
 
+  // Asegurémonos de que los mensajes se limpien después de mostrarse
+  const mostrarMensaje = (mensaje, tipo) => {
+    setMensajeUsuario(mensaje);
+    setTipoMensaje(tipo);
+
+    // Opcional: limpiar el mensaje después de un tiempo para futuros mensajes
+    // setTimeout(() => {
+    //   setMensajeUsuario('');
+    // }, 3500);
+  };
+
   // Handle word submission
   const handleSubmit = () => {
+    soundService.playCorrectAnswer();
     if (estadoJuego !== 'jugando') return;
 
     const palabra = entradaUsuario.trim().toLowerCase();
@@ -453,14 +530,12 @@ function App() {
 
     // Validations
     if (palabra.length < 3) {
-      setMensajeUsuario("Mínimo 3 letras.");
-      setTipoMensaje('error');
+      mostrarMensaje("Mínimo 3 letras.", 'error');
       return;
     }
 
     if (palabrasEncontradas.has(palabra)) {
-      setMensajeUsuario("¡Ya encontraste esta palabra!");
-      setTipoMensaje('error');
+      mostrarMensaje("¡Ya encontraste esta palabra!", 'error');
       return;
     }
 
@@ -477,11 +552,10 @@ function App() {
 
       // Show message with earned points and bingo status if applicable
       if (esPalabraBingo) {
-        setMensajeUsuario(`¡Palabra BINGO encontrada! +${puntos} puntos`);
+        mostrarMensaje(`¡Palabra BINGO encontrada! +${puntos} puntos`, 'success');
       } else {
-        setMensajeUsuario(`¡Palabra válida! +${puntos} puntos`);
+        mostrarMensaje(`¡Palabra válida! +${puntos} puntos`, 'success');
       }
-      setTipoMensaje('success');
 
       // Update found words
       setPalabrasEncontradas(prev => new Set([...prev, palabra]));
@@ -492,8 +566,7 @@ function App() {
       // El juego continúa hasta que se acabe el tiempo
     } else {
       // The word is not valid
-      setMensajeUsuario("Palabra inválida. Intenta con otra.");
-      setTipoMensaje('error');
+      mostrarMensaje("Palabra inválida. Intenta con otra.", 'error');
     }
 
     // Mantener el foco en el componente de entrada
@@ -590,8 +663,15 @@ function App() {
 
   return (
     <div className="app-container">
-      <h1 className="app-title">Text Twist Español</h1>
-
+      {/* Header with title and sound toggle */}
+      <div className="app-header">
+        <img className="logo"  src={logo}></img>
+        <h1 className="app-title">Giro de Palabras </h1>
+        <div className="header-controls">
+          <InstructionsModal />
+          <SoundToggle />
+        </div>
+      </div>
       {isLoading && <p className="loading-indicator">Cargando...</p>}
 
       {error && <div className="error-message">{error}</div>}
@@ -624,9 +704,7 @@ function App() {
             selectedIndices={indicesSeleccionados}
             disabled={estadoJuego !== 'jugando'}
           />
-
-          {/* Word input form */}
-          <WordInput 
+          <WordInput
             ref={wordInputRef}
             value={entradaUsuario}
             onChange={handleInputChange}
@@ -634,42 +712,56 @@ function App() {
             onMixLetters={mezclarLetras}
             disabled={estadoJuego !== 'jugando'}
             maxLength={palabraBase.length}
-            baseLetters={palabraBase}
+            baseLetters={letrasActuales.join('')}
           />
-          <div className="controls">
-            <GameButton
-              onClick={mezclarLetras}
-              disabled={estadoJuego !== 'jugando'}
-              type="secondary"
-            >
-              Mezclar
-            </GameButton>
-            <GameButton
-              onClick={handleSubmit}
-              type="highlight"
-              disabled={estadoJuego !== 'jugando' || entradaUsuario.length === 0}
-            >
-              Enviar
-            </GameButton>
-          </div>
+
+          {/* Agregar el teclado virtual aquí */}
+          <Keyboard
+            onKeyPress={handleKeyPress}
+            availableLetters={letrasActuales.join('')}
+          />
+
+          {/* Play again button */}
+          {(estadoJuego === 'ganado' || estadoJuego === 'perdido') ?
+            (
+              <ActionButtons>
+                <GameButton
+                  onClick={iniciarNuevaRonda}
+                  type="primary"
+                  highlight={true}
+                >
+                  Jugar de Nuevo
+                </GameButton>
+              </ActionButtons>
+            )
+            :
+
+            <>
+              <div className="controls">
+                <GameButton
+                  onClick={mezclarLetras}
+                  disabled={estadoJuego !== 'jugando'}
+                  type="secondary"
+                >
+                  Mezclar
+                </GameButton>
+                <GameButton
+                  onClick={handleSubmit}
+                  type="highlight"
+                  disabled={estadoJuego !== 'jugando' || entradaUsuario.length === 0}
+                >
+                  Enviar
+                </GameButton>
+              </div>
+            </>}
           {/* User feedback message */}
           <UserMessage
             message={mensajeUsuario}
             type={tipoMensaje}
+            duration={3000} // 3 segundos de duración
           />
 
-          {/* Play again button */}
-          {(estadoJuego === 'ganado' || estadoJuego === 'perdido') && (
-            <ActionButtons>
-              <GameButton
-                onClick={iniciarNuevaRonda}
-                type="primary"
-                highlight={true}
-              >
-                Jugar de Nuevo
-              </GameButton>
-            </ActionButtons>
-          )}
+
         </div>
       )}
     </div>

@@ -122,12 +122,13 @@ async function obtenerPalabraAleatoria(rutaArchivo) {
     }
 }
 
+
 // Actualizar las exportaciones
 export default {
     contarLetras,
     sePuedeFormar,
     encontrarPalabrasValidas,
-    obtenerPalabraAleatoria
+    obtenerPalabraAleatoria,
 };
 
 

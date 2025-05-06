@@ -1,5 +1,5 @@
 .found-words-container {
-  background-color: rgba(26, 147, 246, 0.2);
+  background-color: rgba(206, 226, 241, 0.4);
   padding: 10px;
   border-radius: 8px;
   margin-top: 0;
@@ -13,17 +13,18 @@
   color: white;
   margin-bottom: 10px;
   font-size: 1rem;
+  display: none;
 }
 
 .length-group {
-  margin-bottom: 0px;
+  margin: 0;
 }
 
 .length-title {
   color: white;
   text-align: center;
   font-size: 14px;
-  margin: 10px 0 5px 0;
+  margin: 0;
   font-weight: bold;
   padding: 3px 0;
   background-color: rgba(0, 0, 0, 0.2);
@@ -35,11 +36,11 @@
   display: flex;
   flex-wrap: wrap;
   justify-content:flex-start;
-  gap: 10px;
+  gap: 5px;
 }
 
 .word-container {
-  margin-bottom: 2px;
+  margin-bottom: -2px;
 }
 
 .word-container.bingo .word-row {
@@ -48,21 +49,22 @@
 }
 
 .word-container.found.bingo .word-row {
-  background-color: rgba(243, 156, 18, 0.4);
+  background-color: rgba(243, 156, 18, 0.8);
 }
 
 .word-row {
   display: flex;
   flex-wrap: wrap;
   justify-content: center;
-  margin-bottom: 3px;
+  margin: 0;
 }
 
 .word-tile {
   width: 18px;
   height: 18px;
-  background-color: rgba(255, 255, 255, 0.3);
-  border: 1px solid #ccc;
+  background-color: rgba(255, 255, 255, 0.0);
+  border: 1px #ccc;
+  border-style: none none solid none;
   margin: 1px;
   display: flex;
   justify-content: center;
@@ -86,9 +88,9 @@
 }
 
 .not-found .word-tile-filled {
-  opacity: 0.6;
+  opacity: 0.7;
   /* text-decoration: line-through; */
-  background-color: #ccc;
+  background-color: #fff;
   color: #dd1515;
 }
 
