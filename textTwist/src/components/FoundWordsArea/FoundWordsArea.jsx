@@ -27,13 +27,16 @@ const FoundWordsArea = ({ casillas, palabrasEncontradas }) => {
     if (palabra) {
       // Si existe la palabra, mostramos cada letra en un tile
       return (
-        <div className="word-row">
+        <a href={`https://dle.rae.es/${palabra}`} target="_blank" rel="noopener noreferrer">
+        <div className="word-row">          
           {palabra.split('').map((letra, i) => (
             <div key={`letra-${i}`} className="word-tile-filled">
               {letra.toUpperCase()}
             </div>
           ))}
+          
         </div>
+        </a>
       );
     } else {
       // Si no existe, mostramos tiles vacíos

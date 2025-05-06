@@ -1,5 +1,10 @@
 import { useState } from 'react'
 import './InstructionsModal.css'
+import HelpImage from "../../images/help.svg"
+import mezclarIcon from '../../images/mezclar.svg'
+import enviarIcon from '../../images/enviar.svg'
+import repetirIcon from '../../images/restart.svg'
+import siguienteIcon from '../../images/fast_forward.svg'
 
 export const InstructionsModal = () => {
   const [isOpen, setIsOpen] = useState(false)
@@ -7,7 +12,7 @@ export const InstructionsModal = () => {
   return (
     <>
       <button className="instructions-button" onClick={() => setIsOpen(true)}>
-        Ayuda
+        <img src={HelpImage} ></img>
       </button>
 
       {isOpen && (
@@ -17,45 +22,48 @@ export const InstructionsModal = () => {
               ×
             </button>
             <div className="instructions">
-              <h2>Cómo jugar Wordle</h2>
+              <h2>Cómo jugar Giro de Palabras</h2>
               
               <section>
                 <h3>1. Objetivo del juego</h3>
-                <p>Adivinar la <strong>palabra oculta de cinco letras</strong> en un máximo de <strong>seis intentos</strong>.</p>
+                <p> <strong>¡Forma Palabras!</strong></p>
               </section>
 
               <section>
                 <h3>2. Cómo jugar</h3>
                 <ul>
-                  <li>Escribe una <strong>palabra de cinco letras</strong> en el campo de entrada y presiona <strong>"Enter"</strong>.</li>
-                  <li>El juego te dará pistas sobre qué tan cerca estás de la respuesta correcta.</li>
+                  <li>Usa las letras desordenadas que te damos. <strong>Las palabras deben tener 3 letras o más.</strong> </li>
                 </ul>
               </section>
 
               <section>
-                <h3>3. Interpretación de los colores</h3>
+                <h3>3. Encuentra la Palabra Clave</h3>
                 <ul>
-                  <li><span className="color-box green"></span> <strong>Verde:</strong> La letra está en la palabra y en la posición correcta.</li>
-                  <li><span className="color-box yellow"></span> <strong>Amarillo:</strong> La letra está en la palabra, pero en la posición incorrecta.</li>
-                  <li><span className="color-box gray"></span> <strong>Gris:</strong> La letra no está en la palabra.</li>
+                  <li>Intenta hallar la palabra que usa  <strong>TODAS</strong> las letras. <strong>¡Es necesaria para avanzar!</strong></li>
                 </ul>
               </section>
 
               <section>
-                <h3>4. Estrategia para ganar</h3>
+                <h3>4. Introduce Palabras</h3>
                 <ul>
-                  <li>Usa palabras iniciales que contengan <strong>vocales</strong> y <strong>consonantes comunes</strong>.</li>
-                  <li>Observa las pistas de colores para mejorar tu siguiente intento.</li>
-                  <li>Deduce la palabra <strong>antes de llegar al sexto intento</strong>.</li>
-                  <li>Nota: En algunas ocasiones alguna letra <strong>puede usarse mas de una vez</strong>.</li>
+                  <li>Haz clic en las letras o escríbelas. Pulsa <img src={enviarIcon}></img><strong>Enter  o "Enviar"</strong> para validarlas.</li>
+
                 </ul>
               </section>
 
               <section>
-                <h3>5. Final del juego</h3>
+                <h3>5. ¿Atascado?</h3>
                 <ul>
-                  <li>Si adivinas la palabra en seis intentos o menos, ¡ganaste! 🎉</li>
-                  <li>Si no lo logras, el juego te mostrará la palabra correcta.</li>
+                  <li>Usa el botón <img src={mezclarIcon}></img><strong>"Mezclar"</strong> para girar las letras y ver nuevas combinaciones.</li>
+                  <li>Usa el botón <img src={repetirIcon}></img><strong>"Repetir"</strong> para usar la ultima palabra.</li>
+                  <li>Usa el botón <img src={siguienteIcon}></img><strong>"Me Rindo"</strong> para terminar la partida y pasar a la siguiente.</li>
+                </ul>
+              </section>
+
+              <section>
+                <h3>6. ¡Cuidado con el Tiempo!</h3>
+                <ul>
+                  <li>Tienes un límite de tiempo para encontrar <strong>la palabra clave</strong> y pasar de ronda.</li>
                 </ul>
               </section>
             </div>

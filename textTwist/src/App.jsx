@@ -1,4 +1,4 @@
-import { useState, useEffect, useRef } from 'react'
+import { useState, useEffect, useRef, useContext } from 'react'
 import './App.css'
 import utilsFunciones from './utils/funciones.js'
 import FoundWordsArea from './components/FoundWordsArea/FoundWordsArea'
@@ -10,13 +10,22 @@ import UserMessage from './components/GameControls/UserMessage'
 import GameButton from './components/GameButton/GameButton'
 import ActionButtons from './components/GameButton/ActionButtons'
 import Keyboard from './components/Keyboard/Keyboard'
-import SoundToggle from './components/SoundToggle/SoundToggle.jsx'
+import {SettingsModal} from './components/settings/SettingsModal.jsx'
 import { InstructionsModal } from './components/InstructionsModal/InstructionsModal.jsx'
 import soundService from './utils/soundService.js'
 import logo from './images/giroDePalabras-logo1.png'
+import SplashScreen from './components/splashScreen/SplashScreen.jsx'
+import mezclarIcon from './images/mezclar.svg'
+import enviarIcon from './images/enviar.svg'
+import repetirIcon from './images/restart.svg'
+import siguienteIcon from './images/fast_forward.svg'
+import { GameSettingsContext } from './context/GameSettingsContext'
 
 
 function App() {
+  // Acceder al contexto de configuración del juego
+  const { gameTime, isPaused } = useContext(GameSettingsContext);
+
   // Game state
   const [palabraBase, setPalabraBase] = useState('');
   const [letrasActuales, setLetrasActuales] = useState([]);
@@ -30,18 +39,28 @@ function App() {
 
   // User input states
   const [entradaUsuario, setEntradaUsuario] = useState('');
+  const [entradaAnterior, setEntradaAnterior] = useState('');
   const [mensajeUsuario, setMensajeUsuario] = useState('');
   const [tipoMensaje, setTipoMensaje] = useState('info');
+  const [duracionMensaje, setDuracionMensaje] = useState(2000); // Duración en milisegundos
   const [tieneFoco, setTieneFoco] = useState(true); // Nuevo estado para rastrear si el juego tiene foco
 
   // Game progress states
-  const [tiempoRestante, setTiempoRestante] = useState(120); // 2 minutes
+  const [tiempoRestante, setTiempoRestante] = useState(gameTime); // Usa el tiempo configurado
   const [estadoJuego, setEstadoJuego] = useState('cargando');
   const [puntuacion, setPuntuacion] = useState(0);
   const [puntuacionAnterior, setPuntuacionAnterior] = useState(0);
 
   // Nuevo estado para rastrear los índices de letras seleccionadas
   const [indicesSeleccionados, setIndicesSeleccionados] = useState([]);
+  const [indicesAnterior, setIndicesAnterior] = useState([]);
+  const [showSplash, setShowSplash] = useState(true);
+
+  // Función para ocultar el splash screen
+  const hideSplash = () => {
+    setShowSplash(false);
+    iniciarNuevaRonda();
+  };
 
   // Timer reference
   const timerIdRef = useRef(null);
@@ -86,7 +105,10 @@ function App() {
     if (timerIdRef.current) clearInterval(timerIdRef.current);
 
     timerIdRef.current = setInterval(() => {
-      setTiempoRestante(prev => prev - 1);
+      // Solo decrementar el tiempo si el juego no está pausado
+      if (!isPaused) {
+        setTiempoRestante(prev => prev - 1);
+      }
     }, 1000);
   };
 
@@ -110,10 +132,10 @@ function App() {
     // Mensaje según el resultado
     if (gano) {
       soundService.playGameWin();
-      mostrarMensaje(`¡Felicidades! Has encontrado ${haEncontradoPalabraBingo ? 'una palabra bingo' : 'la palabra bingo principal'}.`, 'success');
+      mostrarMensaje(`¡Felicidades! Has encontrado ${haEncontradoPalabraBingo ? 'una palabra bingo' : 'la palabra bingo principal'}.`, 'success', 5000);
     } else {
       soundService.playGameOver();
-      mostrarMensaje(`¡Tiempo agotado! No encontraste ninguna palabra bingo. La palabra base era "${palabraBase}".`, 'error');
+      mostrarMensaje(`¡Tiempo agotado! No encontraste ninguna palabra bingo. La palabra base era "${palabraBase}".`, 'error', 5000);
     }
 
     mostrarPalabrasNoEncontradas();
@@ -159,7 +181,7 @@ function App() {
 
     try {
       // Get a random word from the dictionary
-      const palabra = await utilsFunciones.obtenerPalabraAleatoria('./src/diccionarios/palabras_Base.txt');
+      const palabra = await utilsFunciones.obtenerPalabraAleatoria('./diccionarios/palabras_Base.txt');
       setPalabraBase(palabra);
 
       // Shuffle the letters
@@ -169,7 +191,7 @@ function App() {
       // Find all possible words with these letters
       const letrasDisponiblesStr = letrasDesordenadas.join('');
       const longitudMinima = 3;
-      const rutaDiccionariosPattern = './src/diccionarios/palabras_{}.txt';
+      const rutaDiccionariosPattern = './diccionarios/palabras_{}.txt';
 
       const palabrasValidas = await utilsFunciones.encontrarPalabrasValidas(
         letrasDisponiblesStr,
@@ -198,8 +220,8 @@ function App() {
       // Reset user message
       setMensajeUsuario('');
 
-      // Reset the time
-      setTiempoRestante(120);
+      // Reset the time using the configured game time
+      setTiempoRestante(gameTime);
 
       // Set game state to playing
       setEstadoJuego('jugando');
@@ -504,14 +526,30 @@ function App() {
   };
 
   // Asegurémonos de que los mensajes se limpien después de mostrarse
-  const mostrarMensaje = (mensaje, tipo) => {
+  const mostrarMensaje = (mensaje, tipo, tiempo=2000) => {
     setMensajeUsuario(mensaje);
     setTipoMensaje(tipo);
+    setDuracionMensaje(tiempo); // Duración en milisegundos
 
     // Opcional: limpiar el mensaje después de un tiempo para futuros mensajes
     // setTimeout(() => {
     //   setMensajeUsuario('');
     // }, 3500);
+  };
+
+// Handle repeat last word
+  const repetirUltimaPalabra = () => {
+    if (estadoJuego !== 'jugando') return;
+    if (entradaAnterior) {
+      setEntradaUsuario(entradaAnterior);
+      setIndicesSeleccionados(indicesAnterior);
+      setIndicesAnterior([]);
+      setEntradaAnterior('');
+      mostrarMensaje(`Repetiste la palabra: ${entradaAnterior}`, 'info', 3000);
+      soundService.playCorrectAnswer();
+    } else {  
+      mostrarMensaje("No hay palabra anterior para repetir.", 'error');
+    }
   };
 
   // Handle word submission
@@ -525,6 +563,8 @@ function App() {
     if (!palabra) return;
 
     // Clear the input and selected indices
+    setEntradaAnterior(entradaUsuario);
+    setIndicesAnterior(indicesSeleccionados);
     setEntradaUsuario('');
     setIndicesSeleccionados([]);
 
@@ -552,7 +592,7 @@ function App() {
 
       // Show message with earned points and bingo status if applicable
       if (esPalabraBingo) {
-        mostrarMensaje(`¡Palabra BINGO encontrada! +${puntos} puntos`, 'success');
+        mostrarMensaje(`¡Palabra BINGO encontrada! +${puntos} puntos`, 'success', 3000);
       } else {
         mostrarMensaje(`¡Palabra válida! +${puntos} puntos`, 'success');
       }
@@ -642,17 +682,36 @@ function App() {
     };
   }, [estadoJuego]);
 
-  // Initialize the game when the component mounts
+  // Efecto para actualizar tiempoRestante cuando cambie gameTime
   useEffect(() => {
-    iniciarNuevaRonda();
-
-    return () => {
+    if (estadoJuego === 'jugando') {
+      setTiempoRestante(gameTime);
+      
+      // Reiniciar timer con nuevo tiempo
       if (timerIdRef.current) {
         clearInterval(timerIdRef.current);
-        timerIdRef.current = null;
+        iniciarTimer();
       }
-    };
-  }, []);
+    }
+  }, [gameTime, estadoJuego]);
+
+  // Efecto para controlar el timer cuando el estado de pausa cambia
+  useEffect(() => {
+    if (estadoJuego === 'jugando') {
+      // Si está pausado, limpiamos el timer actual
+      if (isPaused) {
+        if (timerIdRef.current) {
+          clearInterval(timerIdRef.current);
+          timerIdRef.current = null;
+        }
+      } else {
+        // Si se reanuda, iniciamos el timer de nuevo
+        if (!timerIdRef.current) {
+          iniciarTimer();
+        }
+      }
+    }
+  }, [isPaused, estadoJuego]);
 
   // Control the remaining time
   useEffect(() => {
@@ -661,7 +720,10 @@ function App() {
     }
   }, [tiempoRestante, estadoJuego]);
 
-  return (
+  return (<>
+    {showSplash ? (
+      <SplashScreen onComplete={hideSplash} />
+    ) : (
     <div className="app-container">
       {/* Header with title and sound toggle */}
       <div className="app-header">
@@ -669,7 +731,7 @@ function App() {
         <h1 className="app-title">Giro de Palabras </h1>
         <div className="header-controls">
           <InstructionsModal />
-          <SoundToggle />
+          <SettingsModal />
         </div>
       </div>
       {isLoading && <p className="loading-indicator">Cargando...</p>}
@@ -743,14 +805,28 @@ function App() {
                   disabled={estadoJuego !== 'jugando'}
                   type="secondary"
                 >
-                  Mezclar
+                  <img src={mezclarIcon}></img>
                 </GameButton>
                 <GameButton
                   onClick={handleSubmit}
                   type="highlight"
                   disabled={estadoJuego !== 'jugando' || entradaUsuario.length === 0}
                 >
-                  Enviar
+                  <img src={enviarIcon}></img>
+                </GameButton>
+                <GameButton
+                  onClick={repetirUltimaPalabra}
+                  type="secondary"
+                  disabled={estadoJuego !== 'jugando' || entradaAnterior.length === 0}
+                >
+                  <img src={repetirIcon}></img>
+                </GameButton>
+                <GameButton
+                  onClick={finalizarRonda}
+                  type="secondary"
+                  disabled={estadoJuego !== 'jugando'}
+                >
+                  <img src={siguienteIcon}></img>
                 </GameButton>
               </div>
             </>}
@@ -758,13 +834,14 @@ function App() {
           <UserMessage
             message={mensajeUsuario}
             type={tipoMensaje}
-            duration={3000} // 3 segundos de duración
+            duration={duracionMensaje} // default 2 segundos de duración
           />
 
 
         </div>
       )}
-    </div>
+    </div>)}
+  </>
   )
 }
 

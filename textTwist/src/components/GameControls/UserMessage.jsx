@@ -2,7 +2,7 @@ import React, { useEffect, useState } from 'react';
 import PropTypes from 'prop-types';
 import styles from './UserMessage.module.css';
 
-const UserMessage = ({ message, type, duration = 3000 }) => {
+const UserMessage = ({ message, type, duration = 2000 }) => {
   const [visible, setVisible] = useState(false);
   const [activeMessage, setActiveMessage] = useState('');
   const [activeType, setActiveType] = useState('');
@@ -47,7 +47,7 @@ UserMessage.propTypes = {
 UserMessage.defaultProps = {
   message: '',
   type: 'info',
-  duration: 3000
+  duration: 2000
 };
 
 export default UserMessage;

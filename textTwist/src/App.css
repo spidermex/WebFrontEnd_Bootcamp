@@ -97,7 +97,7 @@ button {
 
 .controls {
   display: flex;
-  justify-content: center;
+  justify-content:space-evenly;
 }
 /* Resto del código CSS existente */
 .logo {
