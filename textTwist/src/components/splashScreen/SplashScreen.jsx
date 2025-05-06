@@ -1,5 +1,5 @@
 import { useState, useEffect, useRef } from 'react';
-import logo from '../../images/giroDePalabras-logo1.png';
+import logo from '../../images/giraPalabras-logo2a.png';
 import introAudio from '../../sounds/mySound15secs.mp3';
 import './SplashScreen.css';
 

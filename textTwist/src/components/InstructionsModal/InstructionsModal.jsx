@@ -22,7 +22,7 @@ export const InstructionsModal = () => {
               ×
             </button>
             <div className="instructions">
-              <h2>Cómo jugar Giro de Palabras</h2>
+              <h2>Cómo jugar Gira Palabras</h2>
               
               <section>
                 <h3>1. Objetivo del juego</h3>

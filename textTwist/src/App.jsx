@@ -13,7 +13,7 @@ import Keyboard from './components/Keyboard/Keyboard'
 import {SettingsModal} from './components/settings/SettingsModal.jsx'
 import { InstructionsModal } from './components/InstructionsModal/InstructionsModal.jsx'
 import soundService from './utils/soundService.js'
-import logo from './images/giroDePalabras-logo1.png'
+import logo from './images/giraPalabras-logo2a.png'
 import SplashScreen from './components/splashScreen/SplashScreen.jsx'
 import mezclarIcon from './images/mezclar.svg'
 import enviarIcon from './images/enviar.svg'
@@ -728,7 +728,7 @@ function App() {
       {/* Header with title and sound toggle */}
       <div className="app-header">
         <img className="logo"  src={logo}></img>
-        <h1 className="app-title">Giro de Palabras </h1>
+        <h1 className="app-title">Gira Palabras </h1>
         <div className="header-controls">
           <InstructionsModal />
           <SettingsModal />
