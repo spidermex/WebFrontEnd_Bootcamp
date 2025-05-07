@@ -17,7 +17,7 @@
 }
 
 .length-group {
-  margin: 0;
+  margin:2px 0;
 }
 
 .length-title {
@@ -40,7 +40,7 @@
 }
 
 .word-container {
-  margin-bottom: -2px;
+  margin-bottom: 0px;
 }
 
 .word-container.bingo .word-row {

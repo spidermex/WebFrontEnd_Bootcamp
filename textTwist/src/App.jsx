@@ -20,6 +20,8 @@ import enviarIcon from './images/enviar.svg'
 import repetirIcon from './images/restart.svg'
 import siguienteIcon from './images/fast_forward.svg'
 import { GameSettingsContext } from './context/GameSettingsContext'
+import ReactConfetti from "react-confetti"
+
 
 
 function App() {
@@ -112,6 +114,7 @@ function App() {
     }, 1000);
   };
 
+
   // End the round (win or lose)
   const finalizarRonda = (forzarVictoria = false) => {
     if (timerIdRef.current) {
@@ -132,10 +135,10 @@ function App() {
     // Mensaje según el resultado
     if (gano) {
       soundService.playGameWin();
-      mostrarMensaje(`¡Felicidades! Has encontrado ${haEncontradoPalabraBingo ? 'una palabra bingo' : 'la palabra bingo principal'}.`, 'success', 5000);
+      mostrarMensaje(`¡Felicidades! Has encontrado ${haEncontradoPalabraBingo ? 'una palabra bingo' : 'la palabra bingo principal'}.`, 'success', 3000);
     } else {
       soundService.playGameOver();
-      mostrarMensaje(`¡Tiempo agotado! No encontraste ninguna palabra bingo. La palabra base era "${palabraBase}".`, 'error', 5000);
+      mostrarMensaje(`¡Tiempo agotado! No encontraste ninguna palabra bingo. La palabra base era "${palabraBase}".`, 'error', 3000);
     }
 
     mostrarPalabrasNoEncontradas();
@@ -546,7 +549,6 @@ function App() {
       setIndicesAnterior([]);
       setEntradaAnterior('');
       mostrarMensaje(`Repetiste la palabra: ${entradaAnterior}`, 'info', 3000);
-      soundService.playCorrectAnswer();
     } else {  
       mostrarMensaje("No hay palabra anterior para repetir.", 'error');
     }
@@ -554,7 +556,6 @@ function App() {
 
   // Handle word submission
   const handleSubmit = () => {
-    soundService.playCorrectAnswer();
     if (estadoJuego !== 'jugando') return;
 
     const palabra = entradaUsuario.trim().toLowerCase();
@@ -592,9 +593,11 @@ function App() {
 
       // Show message with earned points and bingo status if applicable
       if (esPalabraBingo) {
+        soundService.playGameWin();
         mostrarMensaje(`¡Palabra BINGO encontrada! +${puntos} puntos`, 'success', 3000);
       } else {
         mostrarMensaje(`¡Palabra válida! +${puntos} puntos`, 'success');
+        soundService.playCorrectAnswer();
       }
 
       // Update found words
@@ -607,6 +610,7 @@ function App() {
     } else {
       // The word is not valid
       mostrarMensaje("Palabra inválida. Intenta con otra.", 'error');
+      soundService.playWrongAnswer();
     }
 
     // Mantener el foco en el componente de entrada
@@ -718,6 +722,16 @@ function App() {
     if (tiempoRestante === 0 && estadoJuego === 'jugando') {
       finalizarRonda(false);
     }
+
+    if(tiempoRestante === 10 && estadoJuego === 'jugando' && !isPaused) {
+      mostrarMensaje("¡Últimos 10 segundos!", 'info', 2000);
+    }
+
+    if(tiempoRestante <= 10 && estadoJuego === 'jugando' && !isPaused && tiempoRestante > 0) {
+      soundService.playCriticalTime();
+    }else {
+      soundService.stopCriticalTime();
+    }
   }, [tiempoRestante, estadoJuego]);
 
   return (<>
@@ -785,7 +799,8 @@ function App() {
 
           {/* Play again button */}
           {(estadoJuego === 'ganado' || estadoJuego === 'perdido') ?
-            (
+            (<>
+              {(estadoJuego === 'ganado' && <ReactConfetti />)}
               <ActionButtons>
                 <GameButton
                   onClick={iniciarNuevaRonda}
@@ -795,9 +810,9 @@ function App() {
                   Jugar de Nuevo
                 </GameButton>
               </ActionButtons>
+            </>
             )
             :
-
             <>
               <div className="controls">
                 <GameButton
@@ -822,7 +837,7 @@ function App() {
                   <img src={repetirIcon}></img>
                 </GameButton>
                 <GameButton
-                  onClick={finalizarRonda}
+                  onClick={()=>finalizarRonda(false)}
                   type="secondary"
                   disabled={estadoJuego !== 'jugando'}
                 >
@@ -836,8 +851,6 @@ function App() {
             type={tipoMensaje}
             duration={duracionMensaje} // default 2 segundos de duración
           />
-
-
         </div>
       )}
     </div>)}
