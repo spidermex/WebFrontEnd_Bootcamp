@@ -1,6 +1,6 @@
 
 
-export const palabras = new Set([
+export const palabras_4 = new Set([
     "abaa",
     "abad",
     "abar",
@@ -2963,3 +2963,4 @@ export const palabras = new Set([
     "zuro",
     "zuzo"
 ]);
+export default palabras_4;

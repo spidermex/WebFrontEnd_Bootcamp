@@ -1,7 +1,7 @@
 // Archivo generado automáticamente a partir de palabras_6.ts
 // Contiene un Set de palabras para optimizar búsquedas
 
-const palabras = new Set([
+export const palabras_6 = new Set([
     "ababol",
     "abacal",
     "abacas",
@@ -25184,4 +25184,4 @@ const palabras = new Set([
     "zutano"
 ]);
 
-module.exports = palabras;
+export default palabras_6;

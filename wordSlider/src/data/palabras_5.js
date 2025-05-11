@@ -1,7 +1,7 @@
 // Archivo generado automáticamente a partir de palabras_5.ts
 // Contiene un Set de palabras para optimizar búsquedas
 
-const palabras = new Set([
+export const palabras_5 = new Set([
     "abaas",
     "abaca",
     "abaco",
@@ -10808,4 +10808,4 @@ const palabras = new Set([
     "zuzar",
     "zuzon"
 ]);
-export default palabras;
+export default palabras_5;
