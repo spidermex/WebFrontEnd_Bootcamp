@@ -1,11 +1,10 @@
-import { useState, useEffect } from "react";
+import { useState, useEffect, useRef } from "react";
 import Board from "./components/Board";
 import "./App.css";
 
 // Importa los datos locales (tablero y diccionario)
 import { palabras } from "./data/palabras_4.js";
 import { boards_4 } from "./data/boards4.js";
-
 
 const TOTAL_MOVES = 20;
 const BOARD_SIZE = 4;
@@ -55,6 +54,8 @@ function App() {
   const [wordsFound, setWordsFound] = useState([]);
   const [selected, setSelected] = useState(null);
   const [mobile, setMobile] = useState(window.innerWidth < 600);
+  const [highlighted, setHighlighted] = useState([]); // [{type: 'row'|'col', idx, reverse, word, timestamp}]
+  const movesPending = useRef(false);
 
   useEffect(() => {
     const handleResize = () => setMobile(window.innerWidth < 600);
@@ -62,51 +63,124 @@ function App() {
     return () => window.removeEventListener("resize", handleResize);
   }, []);
 
-  // Detectar palabras tras cada movimiento
+  // Detectar palabras y resaltar SOLO al descontar un movimiento (al finalizar el drag)
   useEffect(() => {
-    const nuevas = checkWords(board, palabras, wordsFound);
-    if (nuevas.length > 0) {
-      setWordsFound(prev => [...prev, ...nuevas]);
-      setScore(prev => prev + nuevas.length * 100);
-    }
-    // eslint-disable-next-line
-  }, [board]);
+    window.onBoardMoveEnd = () => {
+      if (movesPending.current) {
+        setMoves(m => m - 1);
+        movesPending.current = false;
+        // Validar palabras y resaltar
+        const nuevas = checkWords(board, palabras, wordsFound);
+        if (nuevas.length > 0) {
+          setWordsFound(prev => [...prev, ...nuevas]);
+          setScore(prev => prev + nuevas.length * 100);
+          // Guardar info para resaltar
+          const now = Date.now();
+          const highlights = [];
+          // Filas
+          for (let r = 0; r < BOARD_SIZE; r++) {
+            let str = "";
+            let revStr = "";
+            for (let c = 0; c < BOARD_SIZE; c++) {
+              str += board[r][c];
+              revStr += board[r][BOARD_SIZE - 1 - c];
+            }
+            str = str.toLowerCase();
+            revStr = revStr.toLowerCase();
+            if (palabras.has(str) && !wordsFound.includes(str) && nuevas.includes(str)) {
+              highlights.push({ type: "row", idx: r, reverse: false, word: str, timestamp: now });
+            }
+            if (palabras.has(revStr) && !wordsFound.includes(revStr) && nuevas.includes(revStr)) {
+              highlights.push({ type: "row", idx: r, reverse: true, word: revStr, timestamp: now });
+            }
+          }
+          // Columnas
+          for (let c = 0; c < BOARD_SIZE; c++) {
+            let str = "";
+            let revStr = "";
+            for (let r = 0; r < BOARD_SIZE; r++) {
+              str += board[r][c];
+              revStr += board[BOARD_SIZE - 1 - r][c];
+            }
+            str = str.toLowerCase();
+            revStr = revStr.toLowerCase();
+            if (palabras.has(str) && !wordsFound.includes(str) && nuevas.includes(str)) {
+              highlights.push({ type: "col", idx: c, reverse: false, word: str, timestamp: now });
+            }
+            if (palabras.has(revStr) && !wordsFound.includes(revStr) && nuevas.includes(revStr)) {
+              highlights.push({ type: "col", idx: c, reverse: true, word: revStr, timestamp: now });
+            }
+          }
+          setHighlighted(prev => [...prev, ...highlights]);
+        }
+      }
+    };
+    return () => { window.onBoardMoveEnd = null; };
+  }, [board, palabras, wordsFound]);
+
+  // Limpiar highlights después de 2 segundos
+  useEffect(() => {
+    if (highlighted.length === 0) return;
+    const timer = setInterval(() => {
+      const now = Date.now();
+      setHighlighted(prev => prev.filter(h => now - h.timestamp < 2000));
+    }, 200);
+    return () => clearInterval(timer);
+  }, [highlighted]);
 
   // Lógica para rotar fila
-  const rotateRow = (rowIdx, dir = 1) => {
+  const rotateRow = (rowIdx, dir = 1, isDrag = false) => {
     setBoard(prev => {
       const newBoard = prev.map(r => [...r]);
       if (dir > 0) {
-        newBoard[rowIdx].unshift(newBoard[rowIdx].pop());
+        for (let i = 0; i < dir; i++) newBoard[rowIdx].unshift(newBoard[rowIdx].pop());
       } else {
-        newBoard[rowIdx].push(newBoard[rowIdx].shift());
+        for (let i = 0; i < -dir; i++) newBoard[rowIdx].push(newBoard[rowIdx].shift());
       }
       return newBoard;
     });
-    setMoves(m => m - 1);
+    if (!isDrag) setMoves(m => m - 1);
+    else movesPending.current = true;
   };
 
   // Lógica para rotar columna
-  const rotateCol = (colIdx, dir = 1) => {
+  const rotateCol = (colIdx, dir = 1, isDrag = false) => {
     setBoard(prev => {
       const newBoard = prev.map(r => [...r]);
       if (dir > 0) {
-        const last = newBoard[BOARD_SIZE - 1][colIdx];
-        for (let r = BOARD_SIZE - 1; r > 0; r--) {
-          newBoard[r][colIdx] = newBoard[r - 1][colIdx];
+        for (let i = 0; i < dir; i++) {
+          const last = newBoard[BOARD_SIZE - 1][colIdx];
+          for (let r = BOARD_SIZE - 1; r > 0; r--) {
+            newBoard[r][colIdx] = newBoard[r - 1][colIdx];
+          }
+          newBoard[0][colIdx] = last;
         }
-        newBoard[0][colIdx] = last;
       } else {
-        const first = newBoard[0][colIdx];
-        for (let r = 0; r < BOARD_SIZE - 1; r++) {
-          newBoard[r][colIdx] = newBoard[r + 1][colIdx];
+        for (let i = 0; i < -dir; i++) {
+          const first = newBoard[0][colIdx];
+          for (let r = 0; r < BOARD_SIZE - 1; r++) {
+            newBoard[r][colIdx] = newBoard[r + 1][colIdx];
+          }
+          newBoard[BOARD_SIZE - 1][colIdx] = first;
         }
-        newBoard[BOARD_SIZE - 1][colIdx] = first;
       }
       return newBoard;
     });
-    setMoves(m => m - 1);
+    if (!isDrag) setMoves(m => m - 1);
+    else movesPending.current = true;
   };
+
+  // Manejar el fin de un drag para descontar solo un movimiento y disparar validación
+  useEffect(() => {
+    window.onBoardMoveEnd = () => {
+      if (movesPending.current) {
+        setMoves(m => m - 1);
+        movesPending.current = false;
+        window._boardMoveJustEnded = true;
+      }
+    };
+    return () => { window.onBoardMoveEnd = null; };
+  }, []);
 
   // Selección de celda para interacción táctil/mouse
   const handleSelect = (row, col) => {
@@ -133,6 +207,7 @@ function App() {
           selected={selected}
           onSelect={handleSelect}
           mobile={mobile}
+          highlighted={highlighted}
         />
         <div className="found-words">
           {wordsFound.map((w, i) => (

@@ -2,15 +2,35 @@ import React, { useRef } from "react";
 import "../App.css";
 
 // Board recibe el tablero y callbacks para rotar filas/columnas
-const Board = ({ board, onRotateRow, onRotateCol, selected, onSelect, mobile }) => {
+const Board = ({ board, onRotateRow, onRotateCol, selected, onSelect, mobile, highlighted }) => {
   // Para drag/touch
   const startRef = useRef(null);
+
+  // Helper para saber si una celda está siendo arrastrada (solo la celda bajo el dedo/mouse)
+  const isDragged = (r, c) => {
+    if (!selected || !startRef.current) return false;
+    let offset = 0;
+    const cellSize = mobile ? 56 : 72;
+    const dx = startRef.current.dragType === 'row' ? startRef.current.lastOffset || 0 : 0;
+    const dy = startRef.current.dragType === 'col' ? startRef.current.lastOffset || 0 : 0;
+    if (startRef.current.dragType === 'row') {
+      // Nueva columna
+      const newCol = selected.col + dx;
+      return r === selected.row && c === ((newCol % board.length + board.length) % board.length);
+    } else if (startRef.current.dragType === 'col') {
+      // Nueva fila
+      const newRow = selected.row + dy;
+      return c === selected.col && r === ((newRow % board.length + board.length) % board.length);
+    }
+    // Si no hay drag, solo la celda original
+    return r === selected.row && c === selected.col;
+  };
 
   // Detectar inicio de drag/touch
   const handleStart = (rIdx, cIdx, e) => {
     onSelect(rIdx, cIdx);
     const point = e.touches ? e.touches[0] : e;
-    startRef.current = { x: point.clientX, y: point.clientY, rIdx, cIdx };
+    startRef.current = { x: point.clientX, y: point.clientY, rIdx, cIdx, lastOffset: 0, dragType: null, moved: false };
   };
 
   // Detectar movimiento
@@ -21,27 +41,40 @@ const Board = ({ board, onRotateRow, onRotateCol, selected, onSelect, mobile }) 
     const dy = point.clientY - startRef.current.y;
     // Tamaño de celda (ajustar si cambias el CSS)
     const cellSize = mobile ? 56 : 72;
+    if (!startRef.current.dragType) {
+      if (Math.abs(dx) > Math.abs(dy) && Math.abs(dx) > cellSize / 2) {
+        startRef.current.dragType = 'row';
+      } else if (Math.abs(dy) > Math.abs(dx) && Math.abs(dy) > cellSize / 2) {
+        startRef.current.dragType = 'col';
+      }
+    }
     // Rotar filas
-    if (Math.abs(dx) > Math.abs(dy) && Math.abs(dx) > cellSize / 2) {
+    if (startRef.current.dragType === 'row') {
       const n = Math.round(dx / cellSize);
-      if (n !== 0) {
-        onRotateRow(startRef.current.rIdx, n);
-        startRef.current.x += n * cellSize; // Para permitir más drag
+      if (n !== startRef.current.lastOffset) {
+        onRotateRow(startRef.current.rIdx, n - startRef.current.lastOffset, true);
+        startRef.current.lastOffset = n;
+        startRef.current.moved = true;
       }
     }
     // Rotar columnas
-    else if (Math.abs(dy) > Math.abs(dx) && Math.abs(dy) > cellSize / 2) {
+    else if (startRef.current.dragType === 'col') {
       const n = Math.round(dy / cellSize);
-      if (n !== 0) {
-        onRotateCol(startRef.current.cIdx, n);
-        startRef.current.y += n * cellSize;
+      if (n !== startRef.current.lastOffset) {
+        onRotateCol(startRef.current.cIdx, n - startRef.current.lastOffset, true);
+        startRef.current.lastOffset = n;
+        startRef.current.moved = true;
       }
     }
   };
 
   // Limpiar drag/touch
   const handleEnd = () => {
+    if (startRef.current && startRef.current.moved) {
+      if (typeof window.onBoardMoveEnd === 'function') window.onBoardMoveEnd();
+    }
     startRef.current = null;
+    onSelect(null, null);
   };
 
   return (
@@ -56,9 +89,9 @@ const Board = ({ board, onRotateRow, onRotateCol, selected, onSelect, mobile }) 
         <div className="board-row" key={rIdx}>
           {row.map((cell, cIdx) => (
             <div
-              className={`board-cell${selected && selected.row === rIdx && selected.col === cIdx ? " selected" : ""}`}
+              className={`board-cell${isDragged(rIdx, cIdx) ? " selected" : ""}${highlighted && highlighted.length && highlighted.some(h => (h.type === "row" && h.idx === rIdx) || (h.type === "col" && h.idx === cIdx)) ? " highlighted" : ""}`}
               key={cIdx}
-              onTouchStart={e => handleStart(rIdx, cIdx, e)}
+              onTouchStart={e => { handleStart(rIdx, cIdx, e); }}
               onMouseDown={e => handleStart(rIdx, cIdx, e)}
             >
               {cell}

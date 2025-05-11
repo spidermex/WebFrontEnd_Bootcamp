@@ -1,7 +1,7 @@
 #root {
   max-width: 1280px;
   margin: 0 auto;
-  padding: 2rem;
+  padding: 0 2rem;
   text-align: center;
 }
 
@@ -48,7 +48,8 @@
   align-items: center;
   margin: 1rem auto;
   max-width: 95vw;
-  touch-action: pan-x pan-y;
+  touch-action: none;
+  overscroll-behavior: contain;
 }
 
 .board-row {
@@ -76,6 +77,13 @@
 .board-cell.selected {
   background: #e0e7ff;
   border-color: #6366f1;
+}
+
+.board-cell.highlighted {
+  background: #ffe066;
+  border-color: #f59e42;
+  transition: background 0.2s, border 0.2s;
+  box-shadow: 0 0 8px 2px #ffe06699;
 }
 
 @media (min-width: 600px) {
