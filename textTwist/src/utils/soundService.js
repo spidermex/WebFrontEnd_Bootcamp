@@ -3,7 +3,6 @@
  */
 
 // Importar archivos de sonido
-
 import correctAnswerSound from '../sounds/correct-answer.mp3';
 import wrongAnswerSound from '../sounds/wrong-answer.mp3';
 import gameWinSound from '../sounds/powerUp.mp3';
@@ -17,25 +16,21 @@ const gameWin = new Audio(gameWinSound);
 const gameOver = new Audio(gameOverSound);
 const criticalTime = new Audio(criticalTimeSound);
 
-// Estado global de sonido
-let soundEnabled = true;
-
 /**
  * Servicio de sonido para el juego
  */
 const soundService = {
- 
-/**
- * Reproducir sonido de tiempo crítico
- */
-  playCriticalTime: () => {
+  /**
+   * Reproducir sonido de tiempo crítico
+   */
+  playCriticalTime: (soundEnabled) => {
     if (soundEnabled) {
       criticalTime.currentTime = 0;
       criticalTime.play().catch(error => console.warn('Error reproduciendo sonido:', error));
     }
   },
 
-  stopCriticalTime: () => {
+  stopCriticalTime: (soundEnabled) => {
     if (soundEnabled) {
       criticalTime.pause();
     }
@@ -44,18 +39,17 @@ const soundService = {
   /**
    * Reproducir sonido de respuesta correcta
    */
-  playCorrectAnswer: () => {
+  playCorrectAnswer: (soundEnabled) => {
     if (soundEnabled) {
       correctAnswer.currentTime = 0;
       correctAnswer.play().catch(error => console.warn('Error reproduciendo sonido:', error));
     }
   },
 
-
   /**
    * Reproducir sonido de respuesta incorrecta
    */
-  playWrongAnswer: () => {
+  playWrongAnswer: (soundEnabled) => {
     if (soundEnabled) {
       wrongAnswer.currentTime = 0;
       wrongAnswer.play().catch(error => console.warn('Error reproduciendo sonido:', error));
@@ -65,7 +59,7 @@ const soundService = {
   /**
    * Reproducir sonido de victoria
    */
-  playGameWin: () => {
+  playGameWin: (soundEnabled) => {
     if (soundEnabled) {
       gameWin.currentTime = 0;
       gameWin.play().catch(error => console.warn('Error reproduciendo sonido:', error));
@@ -75,7 +69,7 @@ const soundService = {
   /**
    * Reproducir sonido de derrota
    */
-  playGameOver: () => {
+  playGameOver: (soundEnabled) => {
     if (soundEnabled) {
       gameOver.currentTime = 0;
       gameOver.play().catch(error => console.warn('Error reproduciendo sonido:', error));
@@ -85,7 +79,7 @@ const soundService = {
   /**
    * Habilitar o deshabilitar todos los sonidos
    */
-  toggleSound: () => {
+  toggleSound: (soundEnabled) => {
     soundEnabled = !soundEnabled;
     return soundEnabled;
   },
@@ -93,7 +87,7 @@ const soundService = {
   /**
    * Obtener el estado actual del sonido
    */
-  isSoundEnabled: () => soundEnabled
+  isSoundEnabled: (soundEnabled) => soundEnabled
 };
 
 export default soundService;

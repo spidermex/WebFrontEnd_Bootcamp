@@ -3,7 +3,7 @@ import logo from '../../images/giraPalabras-logo2a.png';
 import introAudio from '../../sounds/mySound15secs.mp3';
 import './SplashScreen.css';
 
-const SplashScreen = ({ onComplete }) => {
+const SplashScreen = ({ onComplete, idioma, soundEnabled }) => {
   const audioRef = useRef(null);
   const [loading, setLoading] = useState(true);
   const [progress, setProgress] = useState(0);
@@ -31,7 +31,7 @@ const SplashScreen = ({ onComplete }) => {
   // Dividir en dos efectos separados
   useEffect(() => {
     // Este efecto maneja SOLO la reproducción del audio
-    if (splashStarted && !audioPlayed) {
+    if (splashStarted && !audioPlayed && soundEnabled) {
       playAudio();
     }
   }, [splashStarted, audioPlayed]);
@@ -95,7 +95,7 @@ const SplashScreen = ({ onComplete }) => {
           className="start-button"
           onClick={handleStart}
         >
-          Iniciar Aplicación
+         {idioma === 'esp' ? `Iniciar Aplicación` : `Start Application`}
         </button>
       ) : (
         <>
@@ -103,7 +103,7 @@ const SplashScreen = ({ onComplete }) => {
             <div className="progress-bar" style={{ width: `${progress}%` }}></div>
           </div>
           <button className="skip-button" onClick={handleSkip}>
-            Saltar Intro
+           {idioma === 'esp' ? `Saltar Intro` : `Skip Intro`}
           </button>
         </>
       )}

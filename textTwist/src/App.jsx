@@ -26,13 +26,17 @@ import ReactConfetti from "react-confetti"
 
 function App() {
   // Acceder al contexto de configuración del juego
-  const { gameTime, isPaused } = useContext(GameSettingsContext);
-
+  const { gameTime, isPaused, soundEnabled, idioma, setIdioma } = useContext(GameSettingsContext);
+  // Leer idioma de localStorage o null si no existe
+  // const getInitialIdioma = () => localStorage.getItem('idioma') || null;
+  // const [idioma2, setIdioma2State] = useState(getInitialIdioma());
+  const [showLanguageModal, setShowLanguageModal] = useState(idioma === null);
   // Game state
   const [palabraBase, setPalabraBase] = useState('');
   const [letrasActuales, setLetrasActuales] = useState([]);
   const [isLoading, setIsLoading] = useState(true);
   const [error, setError] = useState(null);
+
 
   // Word related states
   const [todasLasPalabrasPosibles, setTodasLasPalabrasPosibles] = useState([]);
@@ -62,6 +66,14 @@ function App() {
   const hideSplash = () => {
     setShowSplash(false);
     iniciarNuevaRonda();
+  };
+
+// Cuando el usuario selecciona idioma, guardar en localStorage y cerrar modal
+  const handleIdioma = (lang) => {
+    // localStorage.setItem('idioma', lang);
+    setIdioma(lang);
+    // setIdioma2State(lang);
+    setShowLanguageModal(false);
   };
 
   // Timer reference
@@ -134,13 +146,18 @@ function App() {
 
     // Mensaje según el resultado
     if (gano) {
-      soundService.playGameWin();
-      mostrarMensaje(`¡Felicidades! Has encontrado ${haEncontradoPalabraBingo ? 'una palabra bingo' : 'la palabra bingo principal'}.`, 'success', 3000);
+      soundService.playGameWin(soundEnabled);
+      {idioma=== 'esp' ? mostrarMensaje(`¡Felicidades! Has encontrado ${haEncontradoPalabraBingo ? 'una palabra bingo' : 'la palabra bingo principal'}.`, 'success', 3000)
+      :
+      mostrarMensaje(`Congratulations! You found ${haEncontradoPalabraBingo ? 'a bingo word' : 'the main bingo word'}.`, 'success', 3000)
+      }
     } else {
-      soundService.playGameOver();
-      mostrarMensaje(`¡Tiempo agotado! No encontraste ninguna palabra bingo. La palabra base era "${palabraBase}".`, 'error', 3000);
+      soundService.playGameOver(soundEnabled);
+      {idioma=== 'esp' ? mostrarMensaje(`¡Tiempo agotado! No encontraste ninguna palabra bingo. La palabra base era "${palabraBase}".`, 'error', 3000)
+      :
+      mostrarMensaje(`Time's up! You didn't find any bingo words. The base word was "${palabraBase}".`, 'error', 3000)
+      }
     }
-
     mostrarPalabrasNoEncontradas();
   };
 
@@ -184,7 +201,7 @@ function App() {
 
     try {
       // Get a random word from the dictionary
-      const palabra = await utilsFunciones.obtenerPalabraAleatoria('./diccionarios/palabras_Base.txt');
+      const palabra = await utilsFunciones.obtenerPalabraAleatoria(`./diccionarios/${idioma==='esp' ? 'palabras': 'words'}_Base.txt`);
       setPalabraBase(palabra);
 
       // Shuffle the letters
@@ -194,7 +211,7 @@ function App() {
       // Find all possible words with these letters
       const letrasDisponiblesStr = letrasDesordenadas.join('');
       const longitudMinima = 3;
-      const rutaDiccionariosPattern = './diccionarios/palabras_{}.txt';
+      const rutaDiccionariosPattern = `./diccionarios/${idioma==='esp' ? 'palabras' : 'words'}_{}.txt`;
 
       const palabrasValidas = await utilsFunciones.encontrarPalabrasValidas(
         letrasDisponiblesStr,
@@ -548,9 +565,17 @@ function App() {
       setIndicesSeleccionados(indicesAnterior);
       setIndicesAnterior([]);
       setEntradaAnterior('');
-      mostrarMensaje(`Repetiste la palabra: ${entradaAnterior}`, 'info', 3000);
+      {idioma=== 'esp' ? 
+        mostrarMensaje(`Repetiste la palabra: ${entradaAnterior}`, 'info', 3000)
+        :
+        mostrarMensaje(`You repeated the word: ${entradaAnterior}`, 'info', 3000)
+      }
     } else {  
-      mostrarMensaje("No hay palabra anterior para repetir.", 'error');
+      {idioma=== 'esp' ?
+      mostrarMensaje("No hay palabra anterior para repetir.", 'error')
+      :
+      mostrarMensaje("No previous word to repeat.", 'error')
+      }
     }
   };
 
@@ -571,12 +596,20 @@ function App() {
 
     // Validations
     if (palabra.length < 3) {
-      mostrarMensaje("Mínimo 3 letras.", 'error');
+      {idioma=== 'esp' ?
+      mostrarMensaje("Mínimo 3 letras.", 'error')
+      :
+      mostrarMensaje("Minimum 3 letters.", 'error')
+      }
       return;
     }
 
     if (palabrasEncontradas.has(palabra)) {
-      mostrarMensaje("¡Ya encontraste esta palabra!", 'error');
+      {idioma=== 'esp' ?
+      mostrarMensaje("¡Ya encontraste esta palabra!", 'error')
+      :
+      mostrarMensaje("You've already found this word!", 'error')
+      }
       return;
     }
 
@@ -593,11 +626,19 @@ function App() {
 
       // Show message with earned points and bingo status if applicable
       if (esPalabraBingo) {
-        soundService.playGameWin();
-        mostrarMensaje(`¡Palabra BINGO encontrada! +${puntos} puntos`, 'success', 3000);
+        soundService.playGameWin(soundEnabled);
+        {idioma=== 'esp' ?
+        mostrarMensaje(`¡Palabra BINGO encontrada! +${puntos} puntos`, 'success', 3000)
+        :
+        mostrarMensaje(`BINGO word found! +${puntos} points`, 'success', 3000)
+        }
       } else {
-        mostrarMensaje(`¡Palabra válida! +${puntos} puntos`, 'success');
-        soundService.playCorrectAnswer();
+        {idioma=== 'esp' ?
+        mostrarMensaje(`¡Palabra válida! +${puntos} puntos`, 'success')
+        :
+        mostrarMensaje(`Valid word! +${puntos} points`, 'success')
+        }
+        soundService.playCorrectAnswer(soundEnabled);
       }
 
       // Update found words
@@ -609,8 +650,12 @@ function App() {
       // El juego continúa hasta que se acabe el tiempo
     } else {
       // The word is not valid
-      mostrarMensaje("Palabra inválida. Intenta con otra.", 'error');
-      soundService.playWrongAnswer();
+      {idioma=== 'esp' ?
+      mostrarMensaje("Palabra inválida. Intenta con otra.", 'error')
+      :
+      mostrarMensaje("Invalid word. Try another one.", 'error')
+      }
+      soundService.playWrongAnswer(soundEnabled);
     }
 
     // Mantener el foco en el componente de entrada
@@ -724,31 +769,52 @@ function App() {
     }
 
     if(tiempoRestante === 10 && estadoJuego === 'jugando' && !isPaused) {
-      mostrarMensaje("¡Últimos 10 segundos!", 'info', 2000);
+      {idioma=== 'esp' ?
+      mostrarMensaje("¡Últimos 10 segundos!", 'info', 2000)
+      :
+      mostrarMensaje("Last 10 seconds!", 'info', 2000)
+      }
     }
 
     if(tiempoRestante <= 10 && estadoJuego === 'jugando' && !isPaused && tiempoRestante > 0) {
-      soundService.playCriticalTime();
+      soundService.playCriticalTime(soundEnabled);
     }else {
-      soundService.stopCriticalTime();
+      soundService.stopCriticalTime(soundEnabled);
     }
   }, [tiempoRestante, estadoJuego]);
 
+
+    // Renderizar modal de selección de idioma si no hay idioma guardado
+  if (showLanguageModal) {
+    return (
+      <div className="settings-modal-overlay">
+        <div className="settings-modal">
+          <h2>Idioma / Language</h2>
+          <div className="settings-group">
+            <button onClick={() => handleIdioma('esp')}>Español</button>
+            <button onClick={() => handleIdioma('eng')}>English</button>
+          </div>
+        </div>
+      </div>
+    );
+  }
+
   return (<>
     {showSplash ? (
-      <SplashScreen onComplete={hideSplash} />
+      <SplashScreen onComplete={hideSplash} idioma={idioma} soundEnabled={soundEnabled} />
     ) : (
     <div className="app-container">
       {/* Header with title and sound toggle */}
       <div className="app-header">
         <img className="logo"  src={logo}></img>
-        <h1 className="app-title">Gira Palabras </h1>
+        <h1 className="app-title">
+          {idioma=== 'esp' ? `Gira Palabras` : `Twist Words`} </h1>
         <div className="header-controls">
-          <InstructionsModal />
+          <InstructionsModal idioma={idioma}/>
           <SettingsModal />
         </div>
       </div>
-      {isLoading && <p className="loading-indicator">Cargando...</p>}
+      {isLoading && <p className="loading-indicator">Loading...</p>}
 
       {error && <div className="error-message">{error}</div>}
 
@@ -766,7 +832,7 @@ function App() {
           {/* Game header with timer and score */}
           <div className="game-stats">
             <TimerDisplay seconds={tiempoRestante} />
-            <ScoreDisplay score={puntuacion} previousScore={puntuacionAnterior} />
+            <ScoreDisplay score={puntuacion} previousScore={puntuacionAnterior} idioma={idioma}/>
           </div>
           {/* Found words area */}
           <FoundWordsArea
@@ -807,7 +873,7 @@ function App() {
                   type="primary"
                   highlight={true}
                 >
-                  Jugar de Nuevo
+                  {idioma=== 'esp' ? `Jugar de Nuevo` : `Play Again`}
                 </GameButton>
               </ActionButtons>
             </>

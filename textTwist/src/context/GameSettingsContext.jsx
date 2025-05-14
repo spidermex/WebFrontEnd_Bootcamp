@@ -16,6 +16,11 @@ export const GameSettingsProvider = ({ children }) => {
     return savedSound !== null ? JSON.parse(savedSound) : true; // Predeterminado: sonido activado
   });
   
+    const [idioma, setIdioma] = useState(() => {
+    const savedIdioma = localStorage.getItem('idioma');
+    return savedIdioma !== null ? JSON.parse(savedIdioma) : null; // Predeterminado: español
+  });
+
   // Estado para controlar si el juego está pausado
   const [isPaused, setIsPaused] = useState(false);
 
@@ -28,6 +33,10 @@ export const GameSettingsProvider = ({ children }) => {
     localStorage.setItem('soundEnabled', JSON.stringify(soundEnabled));
   }, [soundEnabled]);
 
+    useEffect(() => {
+    localStorage.setItem('idioma', JSON.stringify(idioma));
+  }, [idioma]);
+
   // Los valores que se expondrán en el contexto
   const value = {
     gameTime,
@@ -35,7 +44,9 @@ export const GameSettingsProvider = ({ children }) => {
     soundEnabled,
     setSoundEnabled,
     isPaused,
-    setIsPaused
+    setIsPaused,
+    idioma,
+    setIdioma
   };
 
   return (

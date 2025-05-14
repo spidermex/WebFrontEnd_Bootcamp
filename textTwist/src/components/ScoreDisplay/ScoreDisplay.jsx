@@ -2,7 +2,7 @@ import React, { useEffect, useRef } from 'react';
 import PropTypes from 'prop-types';
 import styles from './ScoreDisplay.module.css';
 
-const ScoreDisplay = ({ score, previousScore = null }) => {
+const ScoreDisplay = ({ score, previousScore = null, idioma='esp' }) => {
   const scoreRef = useRef(null);
   
   // Add animation when score changes
@@ -19,7 +19,9 @@ const ScoreDisplay = ({ score, previousScore = null }) => {
 
   return (
     <div className={styles.scoreBox}>
-      <span className={styles.scoreLabel}>Puntuación:</span>
+      <span className={styles.scoreLabel}>
+        {idioma=== 'esp' ? `Puntuación:` : `Score:`}
+        </span>
       <span ref={scoreRef} className={styles.scoreValue}>{score}</span>
     </div>
   );
