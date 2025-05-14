@@ -4,7 +4,8 @@ import introAudio from '../sounds/myWordle15secs.mp3';
 import '../styles/SplashScreen.css';
 
 interface SplashScreenProps {
-  onComplete: () => void;
+  onComplete: () => void;  
+  idioma: string; 
 }
 
 interface SplashHandlers {
@@ -12,7 +13,7 @@ interface SplashHandlers {
   timer: number;     // Browser's setTimeout returns a number
 }
 
-const SplashScreen: React.FC<SplashScreenProps> = ({ onComplete }) => {
+const SplashScreen: React.FC<SplashScreenProps> = ({ onComplete, idioma='esp' }) => {
   const audioRef = useRef<HTMLAudioElement>(null);
   const [loading, setLoading] = useState(true);
   const [progress, setProgress] = useState(0);
@@ -81,7 +82,7 @@ const SplashScreen: React.FC<SplashScreenProps> = ({ onComplete }) => {
           className="start-button"
           onClick={() => setSplashStarted(true)}
         >
-          Iniciar Aplicación
+          {idioma === 'esp' ? `Iniciar Aplicación` : `Start Application`}
         </button>
       ) : (
         <>
@@ -89,7 +90,7 @@ const SplashScreen: React.FC<SplashScreenProps> = ({ onComplete }) => {
             <div className="progress-bar" style={{ width: `${progress}%` }}></div>
           </div>
           <button className="skip-button" onClick={handleSkip}>
-            Saltar Intro
+            {idioma === 'esp' ? `Saltar Intro` : `Skip Intro`}
           </button>
         </>
       )}

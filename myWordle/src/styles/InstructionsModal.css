@@ -1,12 +1,13 @@
 .instructions-button {
-  padding: 8px 16px;
-  background-color: #538d4e;
+  padding: 5px 8px;
+  background:none;
   color: #ccc;
   border: none;
   border-radius: 4px;
   cursor: pointer;
   font-size: 14px;
   margin-left: 10px;
+  margin-right: 0;
 }
 
 .modal-overlay {
@@ -66,8 +67,10 @@
   padding-left: 0;
 }
 
-.instructions li {
+.instructions li,
+.instructions p {
   margin-bottom: 8px;
+  text-align: justify;
 }
 
 .color-box {

@@ -61,7 +61,14 @@ const soundService = {
   /**
    * Obtener el estado actual del sonido
    */
-  isSoundEnabled: () => soundEnabled
+  isSoundEnabled: () => soundEnabled,
+
+  /**
+   * Establecer el estado del sonido
+   */
+  setSoundEnabled: (enabled: boolean) => {
+    soundEnabled = enabled;
+  }
 };
 
 export default soundService;

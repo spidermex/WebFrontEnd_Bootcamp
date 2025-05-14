@@ -1,7 +1,12 @@
-import { WORDS } from './palabras'
+import { palabras } from './palabras'
+import { words } from './words'
 
-export const getRandomWord = () => {
-  return WORDS[Math.floor(Math.random() * WORDS.length)]
+export const getRandomWord = (idioma='esp') => {
+  if (idioma === 'eng') {
+    return words[Math.floor(Math.random() * words.length)].toUpperCase()
+  } else {
+  return palabras[Math.floor(Math.random() * palabras.length)]
+  }
 }
 
 export const checkGuess = (guess: string, solution: string) => {
