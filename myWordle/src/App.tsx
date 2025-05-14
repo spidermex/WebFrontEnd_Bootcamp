@@ -11,7 +11,7 @@ import SplashScreen from './components/SplashScreen'
 
 function App() {
   // Leer idioma de localStorage o null si no existe
-  const getInitialIdioma = () => localStorage.getItem('idioma') || null;
+  const getInitialIdioma = () => localStorage.getItem('idiomaWordle') || null;
   const [idioma, setIdiomaState] = useState<string | null>(getInitialIdioma());
   const [showLanguageModal, setShowLanguageModal] = useState(idioma === null);
 
@@ -37,7 +37,7 @@ function App() {
 
   // Cuando el usuario selecciona idioma, guardar en localStorage y cerrar modal
   const setIdioma = (lang: string) => {
-    localStorage.setItem('idioma', lang);
+    localStorage.setItem('idiomaWordle', lang);
     setIdiomaState(lang);
     setShowLanguageModal(false);
   };
