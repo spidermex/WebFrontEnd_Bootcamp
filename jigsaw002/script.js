@@ -34,48 +34,47 @@ function getImageName(path) {
 
 // Función para cargar la lista de imágenes disponibles
 async function loadAvailableImages() {
-    try {
-        // Obtener lista de archivos de la carpeta images
-        const response = await fetch('./images/');
-        const text = await response.text();
+    // Lista estática de imágenes disponibles
+    const defaultImages = [
+        'arte001.jpg',
+        'arte002.jpg', 
+        'arte003.jpg',
+        'casa1.jpg',
+        'cat1.jpg',
+        'cats002.jpg',
+        'cats003.jpg',
+        'cats004.jpg',
+        'cats005.jpg',
+        'cats006.jpg',
+        'cats007.jpg',
+        'ciudad001.jpg',
+        'ciudad002.jpg',
+        'ciudad003.jpg',
+        'ciudad004.jpg',
+        'dali.jpg',
+        'libros002.jpg',
+        'paisaje001.jpg',
+        'paisaje002.jpg',
+        'paisaje003.jpg',
+        'paisaje004.jpg'
+    ];
+
+    // Limpiar la lista actual
+    availableImages.length = 0;
         
-        // Crear un DOM temporal para parsear la respuesta
-        const parser = new DOMParser();
-        const doc = parser.parseFromString(text, 'text/html');
-        
-        // Encontrar todos los enlaces que son imágenes
-        const links = Array.from(doc.querySelectorAll('a'))
-            .filter(a => a.href.match(/\.(jpg|jpeg|png|gif)$/i));
-        
-        // Limpiar la lista actual
-        availableImages.length = 0;
-        
-        // Agregar cada imagen encontrada
-        links.forEach(link => {
-            const path = './images/' + link.href.split('/').pop();
-            availableImages.push({
-                name: getImageName(path),
-                path: path
-            });
+    // Agregar cada imagen a la lista
+    defaultImages.forEach(img => {
+        const path = './images/' + img;
+        availableImages.push({
+            name: getImageName(path),
+            path: path
         });
+    });
         
-        // Ordenar alfabéticamente
-        availableImages.sort((a, b) => a.name.localeCompare(b.name));
-        
-    } catch (error) {
-        console.error('Error loading images:', error);
-        // Si hay error, cargar algunas imágenes por defecto
-        const defaultImages = ['r1.jpg', 'cat1.jpg', 'dali.jpg'];
-        defaultImages.forEach(img => {
-            const path = './images/' + img;
-            availableImages.push({
-                name: getImageName(path),
-                path: path
-            });
-        });
-    }
+    // Ordenar alfabéticamente
+    availableImages.sort((a, b) => a.name.localeCompare(b.name));
     
-    // Después de cargar las imágenes, actualizar la galería
+    // Actualizar la galería
     loadImageGallery();
 }
 
