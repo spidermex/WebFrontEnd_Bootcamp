@@ -1,5 +1,3 @@
-
-
 export const palabras_4 = new Set([
     "abaa",
     "abad",
