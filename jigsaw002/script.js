@@ -168,6 +168,31 @@ document.addEventListener('DOMContentLoaded', () => {
         configModal.style.display = 'block';
     };
 
+    // Manejar guardado de configuración
+    document.getElementById('saveConfig').onclick = () => {
+        // Obtener nuevos valores
+        const newConfig = {
+            bgColor: document.getElementById('bgColor').value,
+            gridSize: parseInt(document.getElementById('gridSize').value),
+            pieceSize: parseInt(document.getElementById('pieceSize').value)
+        };
+
+        // Guardar configuración
+        config = newConfig;
+        localStorage.setItem('puzzleConfig', JSON.stringify(config));
+
+        // Aplicar cambios
+        document.getElementById('my-tablero').style.backgroundColor = config.bgColor;
+        
+        // Reiniciar puzzle con nueva configuración
+        localStorage.removeItem('puzzleState');
+        localStorage.removeItem('originalPositions');
+        initializePuzzle();
+        
+        // Cerrar modal
+        configModal.style.display = 'none';
+    };
+
     // Cargar imágenes
     loadAvailableImages(gallery);
 });
