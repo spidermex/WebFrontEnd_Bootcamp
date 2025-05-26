@@ -78,9 +78,6 @@ async function loadAvailableImages() {
     loadImageGallery();
 }
 
-// Llamar a la función al inicio
-loadAvailableImages();
-
 // Configurar modales
 const modal = document.getElementById('imageModal');
 const previewModal = document.getElementById('previewModal');
@@ -385,6 +382,11 @@ function initializePuzzle() {
     }, 200);
   });
 }
+
+// Agregar este event listener
+document.addEventListener('DOMContentLoaded', () => {
+    loadAvailableImages();
+});
 
 // Inicializar el puzzle cuando la imagen se cargue
 imagen.onload = initializePuzzle;
