@@ -1,0 +1,91 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8">
+  <link rel="icon" type="image/png" sizes="32x32" href="./assets/favicon-32x32.png">
+  <link rel="icon" type="image/png" sizes="16x16" href="./assets/favicon-16x16.png">
+  <link rel="icon" type="image/svg+xml" href="./assets/favicon.ico" />
+  <link rel="manifest" href="site.webmanifest">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+  <meta name="theme-color" content="#000000">
+  <title>Rompecabezas Pelucha</title>
+  <link rel="stylesheet" href="styles.css">
+  <script src="headbreaker.js"></script>
+</head>
+
+<body>
+  <main>
+    <div id="my-tablero"></div>
+    <div class="controls">
+      <label>
+        <input type="checkbox" id="fixedCanvas" checked> Canvas Fijo
+      </label>
+      <button id="loadImage">Cargar Imagen</button>
+      <button id="viewImage">Ver Imagen</button>
+      <button id="solve">Solve</button>
+      <button id="revolver">Revolver</button>
+      <button id="config">Configuración</button>
+    </div>
+  </main>
+
+  <!-- Modal para configuración -->
+  <div id="configModal" class="modal">
+    <div class="modal-content">
+      <span class="close">&times;</span>
+      <h2>Configuración</h2>
+      <div class="config-form">
+        <div class="config-group">
+          <label for="bgColor">Color de fondo:</label>
+          <input type="color" id="bgColor" value="#1a1717">
+        </div>
+
+        <div class="config-group">
+          <label for="gridSize">Tamaño de la cuadrícula:</label>
+          <select id="gridSize">
+            <option value="10">10 x 10</option>
+            <option value="12">12 x 12</option>
+            <option value="15">15 x 15</option>
+            <option value="20">20 x 20</option>
+          </select>
+        </div>
+
+        <div class="config-group">
+          <label for="pieceSize">Tamaño de las piezas:</label>
+          <select id="pieceSize">
+            <option value="20">20px</option>
+            <option value="30">30px</option>
+            <option value="40">40px</option>
+            <option value="50">50px</option>
+          </select>
+        </div>
+
+        <button id="saveConfig">Guardar cambios</button>
+      </div>
+    </div>
+  </div>
+
+  <div id="imageModal" class="modal">
+    <div class="modal-content">
+      <span class="close">&times;</span>
+      <h2>Selecciona una imagen</h2>
+      <div id="imageGallery" class="image-gallery">
+        <!-- Las imágenes se cargarán aquí dinámicamente -->
+      </div>
+    </div>
+  </div>
+
+  <div id="previewModal" class="modal">
+    <div class="modal-content preview-content">
+      <span class="close">&times;</span>
+      <h2>Imagen Original</h2>
+      <div class="image-preview">
+        <img id="previewImage" alt="Vista previa">
+      </div>
+    </div>
+  </div>
+
+  <script src="script.js"></script>
+</body>
+
+</html>
