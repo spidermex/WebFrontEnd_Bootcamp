@@ -27,8 +27,8 @@ body {
 #my-tablero {
     background-color: var(--secondary-bg);
     width: 100%;
-    max-width: 100vmin;
-    height: 100vmin;
+    /* max-width: 100vmin; */
+    /* height: 100vmin; */
     margin: 0 auto;
 }
 
@@ -222,10 +222,10 @@ button:hover {
         gap: 2rem;
     }
 
-    #my-tablero {
+    /* #my-tablero {
         width: 550px;
         height: 550px;
-    }
+    } */
 
     .controls {
         width: 550px;

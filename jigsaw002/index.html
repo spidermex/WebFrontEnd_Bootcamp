@@ -19,11 +19,11 @@
     <div id="my-tablero"></div>
     <div class="controls">
       <label>
-        <input type="checkbox" id="fixedCanvas" checked> Canvas Fijo
+        <input type="checkbox" id="fixedCanvas" checked> Tablero Fijo
       </label>
       <button id="loadImage">Cargar Imagen</button>
       <button id="viewImage">Ver Imagen</button>
-      <button id="solve">Solve</button>
+      <button id="solve">Armar</button>
       <button id="revolver">Revolver</button>
       <button id="config">Configuración</button>
     </div>
@@ -57,6 +57,28 @@
             <option value="30">30px</option>
             <option value="40">40px</option>
             <option value="50">50px</option>
+          </select>
+        </div>
+
+           <div class="config-group">
+          <label for="anchoBoard">Ancho del tablero:</label>
+          <select id="anchoBoard">
+            <option value="500">500px</option>
+            <option value="550">550px</option>
+            <option value="600">600px</option>
+            <option value="650">650px</option>
+          </select>
+        </div>
+
+        <div class="config-group">
+          <label for="altoBoard">Altura del tablero:</label>
+          <select id="altoBoard">
+            <option value="500">500px</option>
+            <option value="550">550px</option>
+            <option value="600">600px</option>
+            <option value="650">650px</option>
+            <option value="700">700px</option>
+            <option value="750">750px</option>
           </select>
         </div>
 

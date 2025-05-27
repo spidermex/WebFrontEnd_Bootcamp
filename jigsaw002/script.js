@@ -8,8 +8,10 @@ imagen.src = './images/cat1.jpg';  // Imagen por defecto
 // Configuración por defecto
 let config = {
     bgColor: '#1a1717',
-    gridSize: 10,
-    pieceSize: 30
+    gridSize: 12,
+    pieceSize: 40,
+    anchoBoard:500,
+    altoBoard:550
 };
 
 // Lista de imágenes disponibles
@@ -71,6 +73,13 @@ async function loadAvailableImages(gallery) {
         'arte001.jpg',
         'arte002.jpg', 
         'arte003.jpg',
+        'arte004.jpg',
+        'arte005.jpg',
+        'arte006.jpg',
+        'arte007.jpg',
+        'arte008.jpg',
+        'arte009.jpg',
+        'arte010.jpg',
         'casa1.jpg',
         'cat1.jpg',
         'cats002.jpg',
@@ -79,16 +88,41 @@ async function loadAvailableImages(gallery) {
         'cats005.jpg',
         'cats006.jpg',
         'cats007.jpg',
+        'cats008.jpg',
+        'cats009.jpg',
+        'cats010.jpg',
         'ciudad001.jpg',
         'ciudad002.jpg',
         'ciudad003.jpg',
         'ciudad004.jpg',
+        'ciudad005.jpg',
+        'ciudad006.jpg',
+        'ciudad007.jpg',
+        'ciudad008.jpg',
+        'ciudad009.jpg',
+        'ciudad010.jpg',
         'dali.jpg',
         'libros002.jpg',
+        'otros001.jpg',
+        'otros002.jpg',
+        'otros003.jpg',
+        'otros004.jpg',
+        'otros005.jpg',
+        'otros006.jpg',
+        'otros007.jpg',
+        'otros008.jpg',
+        'otros009.jpg',
+        'otros010.jpg',
         'paisaje001.jpg',
         'paisaje002.jpg',
         'paisaje003.jpg',
-        'paisaje004.jpg'
+        'paisaje004.jpg',
+        'paisaje005.jpg',
+        'paisaje006.jpg',
+        'paisaje007.jpg',
+        'paisaje008.jpg',
+        'paisaje009.jpg',
+        'paisaje010.jpg',
     ];
 
     // Limpiar la lista actual
@@ -165,6 +199,8 @@ document.addEventListener('DOMContentLoaded', () => {
         document.getElementById('bgColor').value = config.bgColor;
         document.getElementById('gridSize').value = config.gridSize;
         document.getElementById('pieceSize').value = config.pieceSize;
+        document.getElementById('anchoBoard').value = config.anchoBoard;
+        document.getElementById('altoBoard').value = config.altoBoard;
         configModal.style.display = 'block';
     };
 
@@ -174,7 +210,9 @@ document.addEventListener('DOMContentLoaded', () => {
         const newConfig = {
             bgColor: document.getElementById('bgColor').value,
             gridSize: parseInt(document.getElementById('gridSize').value),
-            pieceSize: parseInt(document.getElementById('pieceSize').value)
+            pieceSize: parseInt(document.getElementById('pieceSize').value),
+            anchoBoard: parseInt(document.getElementById('anchoBoard').value),
+            altoBoard: parseInt(document.getElementById('altoBoard').value)
         };
 
         // Guardar configuración
@@ -200,8 +238,8 @@ document.addEventListener('DOMContentLoaded', () => {
 // Función para inicializar el puzzle
 function initializePuzzle() {
     const tablero = new headbreaker.Canvas('my-tablero', {
-        width: 500,
-        height: 500,
+        width: config.anchoBoard,
+        height: config.altoBoard,
         image: imagen,
         outline: new headbreaker.outline.Rounded(),
         preventOffstageDrag: true,
@@ -209,7 +247,7 @@ function initializePuzzle() {
         pieceSize: {x:Math.round(config.pieceSize/factorX), y:Math.round(config.pieceSize/factorY)},
         proximity: 15,
         borderFill: 1,
-        strokeWidth: 1.5,
+        strokeWidth: 1,
     });
 
     // Aplicar configuración de fondo
